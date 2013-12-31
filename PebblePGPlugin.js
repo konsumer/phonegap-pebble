@@ -1,16 +1,20 @@
 function Pebble(){}
 
 /**
- * Synchronously query the Pebble application to see if the connected watch is running a firmware version that supports PebbleKit messages.
+ * Query the Pebble application to see if the connected watch is running a firmware version that supports PebbleKit messages.
  * @return {Boolean}
  */
-Pebble.prototype.areAppMessagesSupported = function(){}
+Pebble.prototype.areAppMessagesSupported = function(callback){
+	cordova.exec(callback, function(err) {}, "Pebble", "areAppMessagesSupported");
+}
  
 /**
  * Send a message to the connected Pebble to close an application identified by a UUID.
  * @param  {String} watchappUuid [description]
  */
-Pebble.prototype.closeAppOnPebble = function(watchappUuid){}
+Pebble.prototype.closeAppOnPebble = function(watchappUuid){
+	cordova.exec(function(){}, function(err) {}, "Pebble", "closeAppOnPebble", [watchappUuid]);
+}
  
 /**
  * Send a message to the connected Pebble to "customize" a built-in PebbleKit watch-app.
@@ -18,19 +22,25 @@ Pebble.prototype.closeAppOnPebble = function(watchappUuid){}
  * @param  {String} name    [description]
  * @param  {Image}  icon     [description]
  */
-Pebble.prototype.customizeWatchApp = function(appType, name, icon){}
+Pebble.prototype.customizeWatchApp = function(appType, name, icon){
+	cordova.exec(function(){}, function(err) {}, "Pebble", "customizeWatchApp", [appType, name, icon]);
+}
  
 /**
  * Get the version information of the firmware running on a connected watch.
  * @return {Object}
  */
-Pebble.prototype.getWatchFWVersion = function(){}
+Pebble.prototype.getWatchFWVersion = function(callback){
+	cordova.exec(callback, function(err) {}, "Pebble", "getWatchFWVersion");
+}
  
 /**
  * Synchronously query the Pebble application to see if the connected watch is running a firmware version that supports PebbleKit data logging.
  * @return {Boolean}
  */
-Pebble.prototype.isDataLoggingSupported = function(){}
+Pebble.prototype.isDataLoggingSupported = function(callback){
+	cordova.exec(callback, function(err) {}, "Pebble", "isDataLoggingSupported");
+}
  
 /**
  * Synchronously query the Pebble application to see if an active Bluetooth connection to a watch currently exists. 

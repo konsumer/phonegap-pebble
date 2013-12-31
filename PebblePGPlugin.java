@@ -15,7 +15,7 @@ public class PebblePGPlugin extends CordovaPlugin {
 
         boolean retValue = true;
         if (action.equals("areAppMessagesSupported")) {
-            this.areAppMessagesSupported();
+            callbackContext.success(this.areAppMessagesSupported());
         } else if (action.equals("closeAppOnPebble")) {
             String watchappUuid = args.getString(0);
             this.closeAppOnPebble(watchappUuid);
@@ -24,9 +24,9 @@ public class PebblePGPlugin extends CordovaPlugin {
             String name = args.getString(1);
             this.customizeWatchApp(appType, name);
         } else if (action.equals("getWatchFWVersion")) {
-            this.getWatchFWVersion();
+            callbackContext.success(this.getWatchFWVersion());
         } else if (action.equals("isDataLoggingSupported")) {
-            this.isDataLoggingSupported();
+            callbackContext.success(this.isDataLoggingSupported());
         } else if (action.equals("isWatchConnected")) {
             this.isWatchConnected();
         } else if (action.equals("registerDataLogReceiver")) {
@@ -71,7 +71,7 @@ public class PebblePGPlugin extends CordovaPlugin {
     }
 
     private Boolean areAppMessagesSupported() {
-        
+        return true;
     }
 
     private void closeAppOnPebble(String watchappUuid) throws JSONException {
@@ -86,11 +86,11 @@ public class PebblePGPlugin extends CordovaPlugin {
         // TODO: Return object?
     }
 
-    private void isDataLoggingSupported() throws JSONException {
+    private Boolean isDataLoggingSupported() throws JSONException {
         // TODO: Return boolean?
     }
 
-    private void isWatchConnected() throws JSONException {
+    private Boolean isWatchConnected() throws JSONException {
     }
 
     private void registerDataLogReceiver(JSONArray args) throws JSONException {
