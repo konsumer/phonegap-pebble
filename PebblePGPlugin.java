@@ -87,7 +87,7 @@ public class PebblePGPlugin extends CordovaPlugin {
     }
 
     private Boolean isDataLoggingSupported() throws JSONException {
-        // TODO: Return boolean?
+        return true;
     }
 
     private Boolean isWatchConnected() throws JSONException {
