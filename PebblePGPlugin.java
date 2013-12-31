@@ -15,17 +15,20 @@ public class PebblePGPlugin extends CordovaPlugin {
 
         boolean retValue = true;
         if (action.equals("areAppMessagesSupported")) {
-            this.areAppMessagesSupported(args);
+            this.areAppMessagesSupported();
         } else if (action.equals("closeAppOnPebble")) {
-            this.closeAppOnPebble(args);
+            String watchappUuid = args.getString(0);
+            this.closeAppOnPebble(watchappUuid);
         } else if (action.equals("customizeWatchApp")) {
-            this.customizeWatchApp(args);
+            String appType = args.getString(0);
+            String name = args.getString(1);
+            this.customizeWatchApp(appType, name);
         } else if (action.equals("getWatchFWVersion")) {
-            this.getWatchFWVersion(args);
+            this.getWatchFWVersion();
         } else if (action.equals("isDataLoggingSupported")) {
-            this.isDataLoggingSupported(args);
+            this.isDataLoggingSupported();
         } else if (action.equals("isWatchConnected")) {
-            this.isWatchConnected(args);
+            this.isWatchConnected();
         } else if (action.equals("registerDataLogReceiver")) {
             this.registerDataLogReceiver(args);
         } else if (action.equals("registerPebbleConnectedReceiver")) {
@@ -57,7 +60,7 @@ public class PebblePGPlugin extends CordovaPlugin {
         } else if (action.equals("showSimpleNotificationOnPebble")) {
             this.showSimpleNotificationOnPebble(args);
         } else if (action.equals("getAccountToken")) {
-            this.getAccountToken(args);
+            this.getAccountToken();
         } else if (action.equals("openURL")) {
             this.openURL(args);
         } else{
@@ -67,22 +70,27 @@ public class PebblePGPlugin extends CordovaPlugin {
         return retValue;
     }
 
-    private void areAppMessagesSupported(JSONArray args) throws JSONException {
+    private Boolean areAppMessagesSupported() {
+        
     }
 
-    private void closeAppOnPebble(JSONArray args) throws JSONException {
+    private void closeAppOnPebble(String watchappUuid) throws JSONException {
+        
     }
 
-    private void customizeWatchApp(JSONArray args) throws JSONException {
+    private void customizeWatchApp(String appType, String name) throws JSONException {
+        // TODO: Image arg3?
     }
 
-    private void getWatchFWVersion(JSONArray args) throws JSONException {
+    private void getWatchFWVersion() throws JSONException {
+        // TODO: Return object?
     }
 
-    private void isDataLoggingSupported(JSONArray args) throws JSONException {
+    private void isDataLoggingSupported() throws JSONException {
+        // TODO: Return boolean?
     }
 
-    private void isWatchConnected(JSONArray args) throws JSONException {
+    private void isWatchConnected() throws JSONException {
     }
 
     private void registerDataLogReceiver(JSONArray args) throws JSONException {
@@ -130,9 +138,10 @@ public class PebblePGPlugin extends CordovaPlugin {
     private void showSimpleNotificationOnPebble(JSONArray args) throws JSONException {
     }
 
-    private void getAccountToken(JSONArray args) throws JSONException {
+    private void getAccountToken() throws JSONException {
+        // TODO: Return string?
     }
-    
+
     private void openURL(JSONArray args) throws JSONException {
     }
 
