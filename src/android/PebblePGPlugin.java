@@ -9,9 +9,6 @@ import java.util.UUID;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.Constants;
 
-// TODO: async callbacks not going to work. need setKeepCallback(true)
-
-
 public class PebblePGPlugin extends CordovaPlugin {
     private PebbleKit.PebbleDataLogReceiver mDataLogReceiver = null;
 
@@ -77,6 +74,10 @@ public class PebblePGPlugin extends CordovaPlugin {
 
             case "registerDataLogReceiver":
                 UUID uuid = UUID.fromString(args.getString(0));
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+                pluginResult.setKeepCallback(true);
+                cb.sendPluginResult(pluginResult);
+                
                 mDataLogReceiver = new PebbleKit.PebbleDataLogReceiver(uuid) {
                     @Override
                     public void receiveData(Context context, UUID logUuid, UnsignedInteger timestamp, UnsignedInteger tag, UnsignedInteger secondsSinceEpoch) {
@@ -103,6 +104,10 @@ public class PebblePGPlugin extends CordovaPlugin {
                 break;
 
             case "registerPebbleConnectedReceiver":
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+                pluginResult.setKeepCallback(true);
+                cb.sendPluginResult(pluginResult);
+                
                 PebbleKit.registerPebbleConnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -112,6 +117,10 @@ public class PebblePGPlugin extends CordovaPlugin {
                 break;
 
             case "registerPebbleDisconnectedReceiver":
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+                pluginResult.setKeepCallback(true);
+                cb.sendPluginResult(pluginResult);
+
                 PebbleKit.registerPebbleDisconnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -122,6 +131,10 @@ public class PebblePGPlugin extends CordovaPlugin {
 
             case "registerReceivedAckHandler":
                 UUID uuid = UUID.fromString(args.getString(0));
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+                pluginResult.setKeepCallback(true);
+                cb.sendPluginResult(pluginResult);
+
                 PebbleKit.registerReceivedAckHandler(getApplicationContext(), new PebbleAckReceiver(uuid) {
                     @Override
                     public void receiveAck(Context context, int transactionId) {
@@ -136,6 +149,10 @@ public class PebblePGPlugin extends CordovaPlugin {
 
             case "registerReceivedNackHandler":
                 UUID uuid = UUID.fromString(args.getString(0));
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+                pluginResult.setKeepCallback(true);
+                cb.sendPluginResult(pluginResult);
+
                 PebbleKit.registerReceivedNackHandler(getApplicationContext(), new PebbleAckReceiver(uuid) {
                     @Override
                     public void receiveNack(Context context, int transactionId) {
