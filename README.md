@@ -6,7 +6,7 @@ It's not all complete, but I'm working on it.
 
 ## Installation
 
-    `cordova plugin add com.jetboystudio.pebble.PebblePGPlugin`
+`cordova plugin add com.jetboystudio.pebble.PebblePGPlugin`
 
 ## Supported Platforms
 
