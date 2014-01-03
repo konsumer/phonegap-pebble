@@ -9,6 +9,8 @@ import java.util.UUID;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.Constants;
 
+// TODO: async callbacks not going to work. need setKeepCallback(true)
+
 
 public class PebblePGPlugin extends CordovaPlugin {
     private PebbleKit.PebbleDataLogReceiver mDataLogReceiver = null;
