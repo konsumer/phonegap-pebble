@@ -1,14 +1,21 @@
-# Phonegap Pebble
+# PebbleKit
 
-A Phonegap interface to PebbleKit
+This plugin provides a cordova plugin interface for [PebbleKit](https://github.com/pebble/pebblekit)
 
-This is a stub. Still working out details.
+It's not all complete, but I'm working on it.
 
 ## Installation
 
-* First install cordova with `sudo npm install -g cordova`
-* Now, install this plugin with `cordova plugin add https://github.com/konsumer/phonegap-pebble.git`
+    `cordova plugin add com.jetboystudio.pebble.PebblePGPlugin`
+
+## Supported Platforms
+
+- Android
+
+Anyone want to add to this list?
+
 
 ## Usage
 
-See `www/` as example.
+Coming soon.
+

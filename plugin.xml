@@ -11,7 +11,7 @@
     <issue>https://github.com/konsumer/phonegap-pebble/issues</issue>
 
 
-    <js-module src="www/js/Pebble.js" name="Pebble">
+    <js-module src="www/Pebble.js" name="Pebble">
         <clobbers target="Pebble" />
     </js-module>
 
@@ -19,9 +19,9 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="Pebble">
-            <param name="android-package" value="org.apache.cordova.pebble.PebblePGPlugin"/>
+                <param name="android-package" value="com.jetboystudio.pebble.PebblePGPlugin"/>
             </feature>
         </config-file>
-        <source-file src="src/android/PebblePGPlugin.java" target-dir="src/org/apache/cordova/pebble" />
+        <source-file src="src/android/PebblePGPlugin.java" target-dir="src/com/jetboystudio/pebble" />
     </platform>
 </plugin>

@@ -1,146 +1,168 @@
+package com.jetboystudio.pebble;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.UUID;
 
-import android.app.Activity;
-import android.content.Intent;
+import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.Constants;
+
 
 public class PebblePGPlugin extends CordovaPlugin {
+    private PebbleKit.PebbleDataLogReceiver mDataLogReceiver = null;
+
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    public boolean execute(String action, JSONArray args, CallbackContext cb) throws JSONException {
+        switch (action) {
+            case "areAppMessagesSupported":
+                cb.success(PebbleKit.areAppMessagesSupported(
+                    getApplicationContext()
+                ));
+                break;
 
-        boolean retValue = true;
-        if (action.equals("areAppMessagesSupported")) {
-            callbackContext.success(this.areAppMessagesSupported());
-        } else if (action.equals("closeAppOnPebble")) {
-            String watchappUuid = args.getString(0);
-            this.closeAppOnPebble(watchappUuid);
-        } else if (action.equals("customizeWatchApp")) {
-            String appType = args.getString(0);
-            String name = args.getString(1);
-            this.customizeWatchApp(appType, name);
-        } else if (action.equals("getWatchFWVersion")) {
-            callbackContext.success(this.getWatchFWVersion());
-        } else if (action.equals("isDataLoggingSupported")) {
-            callbackContext.success(this.isDataLoggingSupported());
-        } else if (action.equals("isWatchConnected")) {
-            this.isWatchConnected();
-        } else if (action.equals("registerDataLogReceiver")) {
-            this.registerDataLogReceiver(args);
-        } else if (action.equals("registerPebbleConnectedReceiver")) {
-            this.registerPebbleConnectedReceiver(args);
-        } else if (action.equals("registerPebbleDisconnectedReceiver")) {
-            this.registerPebbleDisconnectedReceiver(args);
-        } else if (action.equals("registerReceivedAckHandler")) {
-            this.registerReceivedAckHandler(args);
-        } else if (action.equals("registerReceivedDataHandler")) {
-            this.registerReceivedDataHandler(args);
-        } else if (action.equals("registerReceivedNackHandler")) {
-            this.registerReceivedNackHandler(args);
-        } else if (action.equals("requestDataLogsForApp")) {
-            this.requestDataLogsForApp(args);
-        } else if (action.equals("sendAckToPebble")) {
-            this.sendAckToPebble(args);
-        } else if (action.equals("sendDataToPebble")) {
-            this.sendDataToPebble(args);
-        } else if (action.equals("sendDataToPebbleWithTransactionId")) {
-            this.sendDataToPebbleWithTransactionId(args);
-        } else if (action.equals("sendNackToPebble")) {
-            this.sendNackToPebble(args);
-        } else if (action.equals("startAppOnPebble")) {
-            this.startAppOnPebble(args);
-        } else if (action.equals("addEventListener")) {
-            this.addEventListener(args);
-        } else if (action.equals("sendAppMessage")) {
-            this.sendAppMessage(args);
-        } else if (action.equals("showSimpleNotificationOnPebble")) {
-            this.showSimpleNotificationOnPebble(args);
-        } else if (action.equals("getAccountToken")) {
-            this.getAccountToken();
-        } else if (action.equals("openURL")) {
-            this.openURL(args);
-        } else{
-            retValue = false;
+            case "closeAppOnPebble":
+                UUID uuid = UUID.fromString(args.getString(0));
+                cb.success(PebbleKit.closeAppOnPebble(
+                    getApplicationContext(),
+                    uuid
+                ));
+                break;
+
+            case "customizeWatchApp":
+                cb.error("Not Implemented.");
+                /*
+                // TODO: how should I deal with icon?
+                String jsType = args.getString(0);
+                String name = args.getString(1);
+                int appType = PebbleKit.Constants.PebbleAppType.OTHER;
+                UUID uuid = Constants.APP_UUID;
+
+                if (jsType.equals("golf")){
+                    appType = PebbleKit.Constants.PebbleAppType.GOLF;
+                    uuid = Constants.GOLF_UUID;
+                } else if (jsType.equals("sports")) {
+                    appType = PebbleKit.Constants.PebbleAppType.SPORTS;
+                    uuid = Constants.SPORTS_UUID;
+                }
+
+                PebbleKit.customizeWatchApp(
+                    getApplicationContext(),
+                    appType,
+                    name,
+                    icon
+                );
+
+                cb.success(uuid);
+                */
+                break;
+
+            case "getWatchFWVersion":
+                PebbleKit.FirmwareVersionInfo fw = PebbleKit.getWatchFWVersion(getApplicationContext());
+                JSONObject json = new JSONObject();
+                json.put("version", fw.getMajor() + "." + fw.getMinor() + "." + fw.getPoint());
+                json.put("tag", fw.getTag());
+                cb.success(json);
+                break;
+
+            case "isDataLoggingSupported":
+                cb.success(PebbleKit.isDataLoggingSupported(getApplicationContext()));
+                break;
+
+            case "isWatchConnected":
+                cb.success(PebbleKit.isWatchConnected(getApplicationContext()));
+                break;
+
+            case "registerDataLogReceiver":
+                UUID uuid = UUID.fromString(args.getString(0));
+                mDataLogReceiver = new PebbleKit.PebbleDataLogReceiver(uuid) {
+                    @Override
+                    public void receiveData(Context context, UUID logUuid, UnsignedInteger timestamp, UnsignedInteger tag, UnsignedInteger secondsSinceEpoch) {
+                        JSONObject json = new JSONObject();
+                        json.put("logUuid", logUuid);
+                        json.put("timestamp", timestamp);
+                        json.put("tag", tag);
+                        json.put("secondsSinceEpoch", secondsSinceEpoch);
+                        cb.success(json);
+                    }
+                };
+                PebbleKit.registerDataLogReceiver(
+                    getApplicationContext(),
+                    mDataLogReceiver
+                );
+                break;
+
+            case "unregisterDataLogReceiver":
+                if (mDataLogReceiver != null) {
+                    unregisterReceiver(mDataLogReceiver);
+                    mDataLogReceiver = null;
+                }
+                break;
+
+            case "registerPebbleConnectedReceiver":
+                break;
+
+            case "registerPebbleDisconnectedReceiver":
+                break;
+
+            case "registerReceivedAckHandler":
+                break;
+
+            case "registerReceivedDataHandler":
+                break;
+
+            case "registerReceivedNackHandler":
+                break;
+
+            case "requestDataLogsForApp":
+                break;
+
+            case "sendAckToPebble":
+                break;
+
+            case "sendDataToPebble":
+                break;
+
+            case "sendDataToPebbleWithTransactionId":
+                break;
+
+            case "sendNackToPebble":
+                break;
+
+            case "startAppOnPebble":
+                String u = args.getString(0);
+                UUID uuid = UUID.fromString(u);
+                cb.success(PebbleKit.startAppOnPebble(
+                    getApplicationContext(),
+                    uuid
+                ));
+                break;
+
+            case "addEventListener":
+                cb.error("Not Implemented.");
+                break;
+
+            case "sendAppMessage":
+                cb.error("Not Implemented.");
+                break;
+
+            case "showSimpleNotificationOnPebble":
+                cb.error("Not Implemented.");
+                break;
+
+            case "getAccountToken":
+                cb.error("Not Implemented.");
+                break;
+
+            case "openURL":
+                cb.error("Not Implemented.");
+                break;
+            
+            default:
+                return false;
+                break;
         }
-        
-        return retValue;
-    }
 
-    private Boolean areAppMessagesSupported() {
         return true;
-    }
-
-    private void closeAppOnPebble(String watchappUuid) throws JSONException {
-        
-    }
-
-    private void customizeWatchApp(String appType, String name) throws JSONException {
-        // TODO: Image arg3?
-    }
-
-    private void getWatchFWVersion() throws JSONException {
-        // TODO: Return object?
-    }
-
-    private Boolean isDataLoggingSupported() throws JSONException {
-        return true;
-    }
-
-    private Boolean isWatchConnected() throws JSONException {
-    }
-
-    private void registerDataLogReceiver(JSONArray args) throws JSONException {
-    }
-
-    private void registerPebbleConnectedReceiver(JSONArray args) throws JSONException {
-    }
-
-    private void registerPebbleDisconnectedReceiver(JSONArray args) throws JSONException {
-    }
-
-    private void registerReceivedAckHandler(JSONArray args) throws JSONException {
-    }
-
-    private void registerReceivedDataHandler(JSONArray args) throws JSONException {
-    }
-
-    private void registerReceivedNackHandler(JSONArray args) throws JSONException {
-    }
-
-    private void requestDataLogsForApp(JSONArray args) throws JSONException {
-    }
-
-    private void sendAckToPebble(JSONArray args) throws JSONException {
-    }
-
-    private void sendDataToPebble(JSONArray args) throws JSONException {
-    }
-
-    private void sendDataToPebbleWithTransactionId(JSONArray args) throws JSONException {
-    }
-
-    private void sendNackToPebble(JSONArray args) throws JSONException {
-    }
-
-    private void startAppOnPebble(JSONArray args) throws JSONException {
-    }
-
-    private void addEventListener(JSONArray args) throws JSONException {
-    }
-
-    private void sendAppMessage(JSONArray args) throws JSONException {
-    }
-
-    private void showSimpleNotificationOnPebble(JSONArray args) throws JSONException {
-    }
-
-    private void getAccountToken() throws JSONException {
-        // TODO: Return string?
-    }
-
-    private void openURL(JSONArray args) throws JSONException {
-    }
-
 }
