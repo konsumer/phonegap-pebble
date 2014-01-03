@@ -31,9 +31,8 @@ public class PebblePGPlugin extends CordovaPlugin {
                 break;
 
             case "customizeWatchApp":
-                cb.error("Not Implemented.");
+                cb.error("Not Implemented: Need to figure out icon image.");
                 /*
-                // TODO: how should I deal with icon?
                 String jsType = args.getString(0);
                 String name = args.getString(1);
                 int appType = PebbleKit.Constants.PebbleAppType.OTHER;
@@ -98,6 +97,7 @@ public class PebblePGPlugin extends CordovaPlugin {
                     unregisterReceiver(mDataLogReceiver);
                     mDataLogReceiver = null;
                 }
+                cb.success();
                 break;
 
             case "registerPebbleConnectedReceiver":
@@ -119,6 +119,12 @@ public class PebblePGPlugin extends CordovaPlugin {
                 break;
 
             case "sendAckToPebble":
+                int transactionId = args.getInt(0);
+                PebbleKit.sendAckToPebble(
+                    getApplicationContext(),
+                    transactionId
+                );
+                cb.success();
                 break;
 
             case "sendDataToPebble":
@@ -128,6 +134,11 @@ public class PebblePGPlugin extends CordovaPlugin {
                 break;
 
             case "sendNackToPebble":
+                int transactionId = args.getInt(0);
+                PebbleKit.sendAckToPebble(
+                    getApplicationContext(),
+                    transactionId
+                );
                 break;
 
             case "startAppOnPebble":
@@ -140,23 +151,23 @@ public class PebblePGPlugin extends CordovaPlugin {
                 break;
 
             case "addEventListener":
-                cb.error("Not Implemented.");
+                cb.error("Not Implemented: this is in the official app javascript.");
                 break;
 
             case "sendAppMessage":
-                cb.error("Not Implemented.");
+                cb.error("Not Implemented: this is in the official app javascript.");
                 break;
 
             case "showSimpleNotificationOnPebble":
-                cb.error("Not Implemented.");
+                cb.error("Not Implemented: this is in the official app javascript.");
                 break;
 
             case "getAccountToken":
-                cb.error("Not Implemented.");
+                cb.error("Not Implemented: this is in the official app javascript.");
                 break;
 
             case "openURL":
-                cb.error("Not Implemented.");
+                cb.error("Not Implemented: this is in the official app javascript.");
                 break;
             
             default:
