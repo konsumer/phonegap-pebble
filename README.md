@@ -4,21 +4,11 @@ A Phonegap interface to PebbleKit
 
 This is a stub. Still working out details.
 
-## Integration
+## Installation
 
-*  Download [Pebble SDK](https://developer.getpebble.com/2/getting-started/) and integrate with project
-*  Add PebblePGPlugin.java to your project, in src/com/phonegap/pebble/.
-*  Copy PebblePGPlugin.js to your project's www/js folder.
-*  Add the following to www/config.xml for PhoneGap version 3.0+:
+* First install cordova with `sudo npm install -g cordova`
+* Now, install this plugin with `cordova plugin add https://github.com/konsumer/phonegap-pebble.git`
 
-```xml
-<feature name="Pebble">
-	<param name="android-package" value="com.phonegap.pebble.PebblePGPlugin" />
-</feature>
-```
+## Usage
 
-for older versions under the plugins tag:
-
-```xml
-<plugin name="Pebble" value="com.phonegap.pebble.PebblePGPlugin" />
-```
+See `www/` as example.

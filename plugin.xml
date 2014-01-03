@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+           id="org.apache.cordova.splashscreen"
+      version="0.2.6">
+    <name>Pebble</name>
+    <description>Cordova Pebble Watch Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,pebble</keywords>
+    <repo>https://github.com/konsumer/phonegap-pebble.git</repo>
+    <issue>https://github.com/konsumer/phonegap-pebble/issues</issue>
+
+
+    <js-module src="www/js/Pebble.js" name="Pebble">
+        <clobbers target="Pebble" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Pebble">
+            <param name="android-package" value="org.apache.cordova.pebble.PebblePGPlugin"/>
+            </feature>
+        </config-file>
+        <source-file src="src/android/PebblePGPlugin.java" target-dir="src/org/apache/cordova/pebble" />
+    </platform>
+</plugin>
