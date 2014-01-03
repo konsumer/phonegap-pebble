@@ -101,53 +101,76 @@ public class PebblePGPlugin extends CordovaPlugin {
                 break;
 
             case "registerPebbleConnectedReceiver":
+                PebbleKit.registerPebbleConnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        cb.success(intent.getClass().getSimpleName());
+                    }
+                });
                 break;
 
             case "registerPebbleDisconnectedReceiver":
+                PebbleKit.registerPebbleDisconnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        cb.success(intent.getClass().getSimpleName());
+                    }
+                });
                 break;
 
             case "registerReceivedAckHandler":
+                UUID uuid = UUID.fromString(args.getString(0));
+                PebbleKit.registerReceivedAckHandler(getApplicationContext(), new PebbleAckReceiver(uuid) {
+                    @Override
+                    public void receiveAck(Context context, int transactionId) {
+                        cb.success(transactionId);
+                    }
+                });
                 break;
 
             case "registerReceivedDataHandler":
+                cb.error("Not Implemented: unsure of how to convert complex data-types");
                 break;
 
             case "registerReceivedNackHandler":
+                UUID uuid = UUID.fromString(args.getString(0));
+                PebbleKit.registerReceivedNackHandler(getApplicationContext(), new PebbleAckReceiver(uuid) {
+                    @Override
+                    public void receiveNack(Context context, int transactionId) {
+                        cb.success(transactionId);
+                    }
+                });
                 break;
 
             case "requestDataLogsForApp":
+                UUID uuid = UUID.fromString(args.getString(0));
+                PebbleKit.requestDataLogsForApp(getApplicationContext(), uuid);
+                cb.success();
                 break;
 
             case "sendAckToPebble":
                 int transactionId = args.getInt(0);
-                PebbleKit.sendAckToPebble(
-                    getApplicationContext(),
-                    transactionId
-                );
+                PebbleKit.sendAckToPebble(getApplicationContext(), transactionId);
                 cb.success();
                 break;
 
             case "sendDataToPebble":
+                cb.error("Not Implemented: unsure of how to convert complex data-types");
                 break;
 
             case "sendDataToPebbleWithTransactionId":
+                cb.error("Not Implemented: unsure of how to convert complex data-types");
                 break;
 
             case "sendNackToPebble":
                 int transactionId = args.getInt(0);
-                PebbleKit.sendAckToPebble(
-                    getApplicationContext(),
-                    transactionId
-                );
+                PebbleKit.sendAckToPebble(getApplicationContext(), transactionId);
+                cb.success();
                 break;
 
             case "startAppOnPebble":
-                String u = args.getString(0);
-                UUID uuid = UUID.fromString(u);
-                cb.success(PebbleKit.startAppOnPebble(
-                    getApplicationContext(),
-                    uuid
-                ));
+                UUID uuid = UUID.fromString(args.getString(0));
+                cb.success(PebbleKit.startAppOnPebble(getApplicationContext(), uuid));
                 break;
 
             case "addEventListener":
