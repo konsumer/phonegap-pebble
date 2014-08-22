@@ -1,14 +1,10 @@
 package com.jetboystudio.pebble;
 
-import org.apache.cordova.CallbackContext;
-import org.apache.cordova.CordovaPlugin;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONException;
+import org.apache.cordova.*;
+import org.json.*;
 import java.util.UUID;
 
-import com.getpebble.android.kit.PebbleKit;
-import com.getpebble.android.kit.Constants;
+import com.getpebble.android.kit.*;
 
 public class PebblePGPlugin extends CordovaPlugin {
     private PebbleKit.PebbleDataLogReceiver mDataLogReceiver = null;
@@ -16,7 +12,7 @@ public class PebblePGPlugin extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext cb) throws JSONException {
         if (action.equals("getWatchFWVersion")){
-            PebbleKit.FirmwareVersionInfo fw = PebbleKit.getWatchFWVersion(getApplicationContext());
+            PebbleKit.FirmwareVersionInfo fw = PebbleKit.getWatchFWVersion( this.cordova.getActivity().getApplicationContext() );
             JSONObject json = new JSONObject();
             json.put("version", fw.getMajor() + "." + fw.getMinor() + "." + fw.getPoint());
             json.put("tag", fw.getTag());
@@ -25,7 +21,12 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
         
         if (action.equals("isWatchConnected")){
-            cb.success(PebbleKit.isWatchConnected(getApplicationContext()));
+            boolean bConnected = PebbleKit.isWatchConnected( this.cordova.getActivity().getApplicationContext() );
+            int iConnected = 0;
+            if (bConnected){
+                iConnected = 1;
+            }
+            cb.success(iConnected);
             return true;
         }
 
