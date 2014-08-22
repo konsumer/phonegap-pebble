@@ -1,45 +1,18 @@
 var cordova = require('cordova');
 
-// every method has node-style callback as last argument: function(error, result)
-// if last arg is not a function, use it as arg
-var cordova_exec = function(method, args){
-	if (args.length){
-		callback = args.pop();
-		if (typeof(callback) !== 'function'){ args.push(callback); }
-	}
+var Pebble = {};
+
+Pebble.isWatchConnected = function(cb){
 	cordova.exec(function(result){
-		callback(null, result);
-	}, callback, "Pebble", method, args);
+		cb(null, result);
+	}, cb, 'Pebble', 'isWatchConnected', []);
 }
 
-var Pebble = {};
-[
-	"areAppMessagesSupported",
-	"closeAppOnPebble",
-	"customizeWatchApp",
-	"getWatchFWVersion",
-	"isDataLoggingSupported",
-	"isWatchConnected",
-	"registerDataLogReceiver",
-	"unregisterDataLogReceiver",
-	"registerPebbleConnectedReceiver",
-	"registerPebbleDisconnectedReceiver",
-	"registerReceivedAckHandler",
-	"registerReceivedDataHandler",
-	"registerReceivedNackHandler",
-	"requestDataLogsForApp",
-	"sendAckToPebble",
-	"sendDataToPebble",
-	"sendDataToPebbleWithTransactionId",
-	"sendNackToPebble",
-	"startAppOnPebble",
-	"addEventListener",
-	"sendAppMessage",
-	"showSimpleNotificationOnPebble",
-	"getAccountToken",
-	"openURL"
-].forEach(function(method) {
-	Pebble[method] = new Function('cordova_exec(' + method + ', Array.prototype.slice.call(arguments));');
-});
+Pebble.getWatchFWVersion = function(cb){
+	cordova.exec(function(result){
+		cb(null, result);
+	}, cb, 'Pebble', 'getWatchFWVersion', []);
+}
+
 
 module.exports = Pebble;
