@@ -23,5 +23,6 @@
             </feature>
         </config-file>
         <source-file src="src/android/PebblePGPlugin.java" target-dir="src/com/jetboystudio/pebble" />
+        <source-file src="src/android/libs/pebble_kit.jar" target-dir="libs" />
     </platform>
 </plugin>
