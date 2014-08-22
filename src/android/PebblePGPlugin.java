@@ -21,12 +21,7 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
         
         if (action.equals("isWatchConnected")){
-            boolean bConnected = PebbleKit.isWatchConnected( this.cordova.getActivity().getApplicationContext() );
-            int iConnected = 0;
-            if (bConnected){
-                iConnected = 1;
-            }
-            cb.success(iConnected);
+            cb.success(PebbleKit.isWatchConnected( this.cordova.getActivity().getApplicationContext() ) ? 1 : 0);
             return true;
         }
 
