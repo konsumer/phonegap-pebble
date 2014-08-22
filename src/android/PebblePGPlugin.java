@@ -31,29 +31,6 @@ public class PebblePGPlugin extends CordovaPlugin {
 
             case "customizeWatchApp":
                 cb.error("Not Implemented: Need to figure out icon image.");
-                /*
-                String jsType = args.getString(0);
-                String name = args.getString(1);
-                int appType = PebbleKit.Constants.PebbleAppType.OTHER;
-                UUID uuid = Constants.APP_UUID;
-
-                if (jsType.equals("golf")){
-                    appType = PebbleKit.Constants.PebbleAppType.GOLF;
-                    uuid = Constants.GOLF_UUID;
-                } else if (jsType.equals("sports")) {
-                    appType = PebbleKit.Constants.PebbleAppType.SPORTS;
-                    uuid = Constants.SPORTS_UUID;
-                }
-
-                PebbleKit.customizeWatchApp(
-                    getApplicationContext(),
-                    appType,
-                    name,
-                    icon
-                );
-
-                cb.success(uuid);
-                */
                 break;
 
             case "getWatchFWVersion":
@@ -218,4 +195,5 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
 
         return true;
+    }
 }
