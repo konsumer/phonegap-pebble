@@ -49,6 +49,32 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
+        if (action.equals("alert")){
+            final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+            final Map data = new HashMap();
+            data.put("title", args.getString(1));
+            data.put("body", args.getString(2));
+            final JSONObject jsonData = new JSONObject(data);
+            final String notificationData = new JSONArray().put(jsonData).toString();
+
+            i.putExtra("messageType", "PEBBLE_ALERT");
+            i.putExtra("sender", args.getString(0));
+            i.putExtra("notificationData", notificationData);
+
+            sendBroadcast(i);
+            return true;
+        }
+
+        if (action.equals("registerPebbleConnectedReceiver")){
+            cb.error("Not Implemented.");
+            return true;
+        }
+
+        if (action.equals("registerPebbleDisconnectedReceiver")){
+            cb.error("Not Implemented.");
+            return true;
+        }
+
         if (action.equals("registerDataLogReceiver")){
             cb.error("Not Implemented.");
             return true;
@@ -60,16 +86,6 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
 
         if (action.equals("customizeWatchApp")){
-            cb.error("Not Implemented.");
-            return true;
-        }
-
-        if (action.equals("registerPebbleConnectedReceiver")){
-            cb.error("Not Implemented.");
-            return true;
-        }
-
-        if (action.equals("registerPebbleDisconnectedReceiver")){
             cb.error("Not Implemented.");
             return true;
         }

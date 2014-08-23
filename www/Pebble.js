@@ -53,17 +53,20 @@ Pebble.isDataLoggingSupported = function(cb){
 };
 
 /**
- * Modify one of the built-in apps
- * @param  {String}   type "golf", "sports",or somehting else (custom)
- * @param  {String}   name The name as it appears on watch
- * @param  {Object}   icon Not really sure yet.  Need to work this out
- * @param  {Function} cb   function(error, uuid)
+ * Send an alert to Pebble
+ * @param  {[type]} sender Who is sending this?
+ * @param  {[type]} title  title of message
+ * @param  {[type]} body   body of message
  */
+Pebble.alert = function(sender, title, body, cb){
+    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'alert', [sender, title, body]);
+}
+
+///////  None of these are implemented:
+
 Pebble.customizeWatchApp = function(type, name, icon, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'customizeWatchApp', [type, name, icon]);
 };
-
-///////  None of these are implemented:
 
 Pebble.registerDataLogReceiver = function(uuid, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerDataLogReceiver', [uuid]);
