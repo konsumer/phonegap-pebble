@@ -110,7 +110,7 @@ public class PebblePGPlugin extends CordovaPlugin {
 
         if (action.equals("registerReceivedDataHandler")){
             UUID uuid = UUID.fromString(args.getString(0));
-            PebbleKit.registerReceivedDataHandler(this, new PebbleKit.PebbleDataReceiver(uuid) {
+            PebbleKit.registerReceivedDataHandler(this.cordova.getActivity().getApplicationContext(), new PebbleKit.PebbleDataReceiver(uuid) {
                 @Override
                 public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
                     cb.success(transactionId);
