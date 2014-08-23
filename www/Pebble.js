@@ -53,23 +53,6 @@ Pebble.isDataLoggingSupported = function(cb){
 };
 
 /**
- * Register a callback for data-logging
- * @param  {String}   uuid UUID of callback
- * @param  {Function} cb   function(error, data)
- */
-Pebble.registerDataLogReceiver = function(uuid, cb){
-	cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerDataLogReceiver', [uuid]);
-};
-
-/**
- * Unregister the previously registered receiver
- * @param  {Function} cb function(error, data)
- */
-Pebble.unregisterDataLogReceiver = function(cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'unregisterDataLogReceiver', []);
-};
-
-/**
  * Modify one of the built-in apps
  * @param  {String}   type "golf", "sports",or somehting else (custom)
  * @param  {String}   name The name as it appears on watch
@@ -81,6 +64,14 @@ Pebble.customizeWatchApp = function(type, name, icon, cb){
 };
 
 ///////  None of these are implemented:
+
+Pebble.registerDataLogReceiver = function(uuid, cb){
+    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerDataLogReceiver', [uuid]);
+};
+
+Pebble.unregisterDataLogReceiver = function(cb){
+    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'unregisterDataLogReceiver', []);
+};
 
 Pebble.registerPebbleConnectedReceiver = function(cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerPebbleConnectedReceiver', []);
