@@ -6,6 +6,7 @@ import java.util.*;
 import android.content.*;
 
 import com.getpebble.android.kit.*;
+import com.getpebble.android.kit.util.*;
 
 public class PebblePGPlugin extends CordovaPlugin {
     private PebbleKit.PebbleDataLogReceiver mDataLogReceiver = null;
@@ -108,24 +109,58 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
+        // TODO: untested!
         if (action.equals("registerReceivedDataHandler")){
             UUID uuid = UUID.fromString(args.getString(0));
             PebbleKit.registerReceivedDataHandler(this.cordova.getActivity().getApplicationContext(), new PebbleKit.PebbleDataReceiver(uuid) {
                 @Override
                 public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
-                    cb.success(transactionId);
+                    try{
+                        JSONObject json = new JSONObject();
+                        json.put("transaction", transactionId);
+                        json.put("data", data);
+                        cb.success(json);
+                    } catch(Exception e){
+                        cb.error(e.toString());
+                    }
                 }
             });
             return true;
         }
 
+        // TODO: untested!
         if (action.equals("registerReceivedAckHandler")){
-            cb.error("Not Implemented.");
+            UUID uuid = UUID.fromString(args.getString(0));
+            PebbleKit.registerReceivedAckHandler(this.cordova.getActivity().getApplicationContext(), new PebbleKit.PebbleAckReceiver(uuid) {
+                @Override
+                public void receiveAck(Context context, int transactionId) {
+                    try{
+                        JSONObject json = new JSONObject();
+                        json.put("transaction", transactionId);
+                        cb.success(json);
+                    } catch(Exception e){
+                        cb.error(e.toString());
+                    }
+                }
+            });
             return true;
         }
 
+        // TODO: untested!
         if (action.equals("registerReceivedNackHandler")){
-            cb.error("Not Implemented.");
+            UUID uuid = UUID.fromString(args.getString(0));
+            PebbleKit.registerReceivedNackHandler(this.cordova.getActivity().getApplicationContext(), new PebbleKit.PebbleNackReceiver(uuid) {
+                @Override
+                public void receiveNack(Context context, int transactionId) {
+                    try{
+                        JSONObject json = new JSONObject();
+                        json.put("transaction", transactionId);
+                        cb.success(json);
+                    } catch(Exception e){
+                        cb.error(e.toString());
+                    }
+                }
+            });
             return true;
         }
 

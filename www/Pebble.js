@@ -114,11 +114,11 @@ Pebble.registerReceivedDataHandler = function(uuid, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedDataHandler', []);
 };
 
-Pebble.registerReceivedAckHandler = function(cb){
+Pebble.registerReceivedAckHandler = function(uuid, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedAckHandler', []);
 };
 
-Pebble.registerReceivedNackHandler = function(cb){
+Pebble.registerReceivedNackHandler = function(uuid, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedNackHandler', []);
 };
 
