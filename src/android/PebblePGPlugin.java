@@ -108,7 +108,28 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
+        if (action.equals("registerReceivedDataHandler")){
+            UUID uuid = UUID.fromString(args.getString(0));
+            PebbleKit.registerReceivedDataHandler(this, new PebbleKit.PebbleDataReceiver(uuid) {
+                @Override
+                public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
+                    cb.success(transactionId);
+                }
+            });
+            return true;
+        }
 
+        if (action.equals("registerReceivedAckHandler")){
+            cb.error("Not Implemented.");
+            return true;
+        }
+
+        if (action.equals("registerReceivedNackHandler")){
+            cb.error("Not Implemented.");
+            return true;
+        }
+
+        /////
 
         if (action.equals("registerDataLogReceiver")){
             cb.error("Not Implemented.");
@@ -121,21 +142,6 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
 
         if (action.equals("customizeWatchApp")){
-            cb.error("Not Implemented.");
-            return true;
-        }
-
-        if (action.equals("registerReceivedAckHandler")){
-            cb.error("Not Implemented.");
-            return true;
-        }
-
-        if (action.equals("registerReceivedDataHandler")){
-            cb.error("Not Implemented.");
-            return true;
-        }
-
-        if (action.equals("registerReceivedNackHandler")){
             cb.error("Not Implemented.");
             return true;
         }
