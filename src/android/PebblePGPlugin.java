@@ -2,7 +2,9 @@ package com.jetboystudio.pebble;
 
 import org.apache.cordova.*;
 import org.json.*;
-import java.util.UUID;
+import java.util.*;
+import android.content.Intent;
+import android.content.Context;
 
 import com.getpebble.android.kit.*;
 
@@ -61,7 +63,17 @@ public class PebblePGPlugin extends CordovaPlugin {
             i.putExtra("sender", args.getString(0));
             i.putExtra("notificationData", notificationData);
 
-            sendBroadcast(i);
+            this.cordova.getActivity().getApplicationContext().sendBroadcast(i);
+            return true;
+        }
+
+        if (action.equals("music")){
+            final Intent i = new Intent("com.getpebble.action.NOW_PLAYING");
+            i.putExtra("artist", args.getString(0));
+            i.putExtra("album", args.getString(1));
+            i.putExtra("track", args.getString(2));
+
+            this.cordova.getActivity().getApplicationContext().sendBroadcast(i);
             return true;
         }
 

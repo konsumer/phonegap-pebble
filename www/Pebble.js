@@ -54,12 +54,24 @@ Pebble.isDataLoggingSupported = function(cb){
 
 /**
  * Send an alert to Pebble
- * @param  {[type]} sender Who is sending this?
- * @param  {[type]} title  title of message
- * @param  {[type]} body   body of message
+ * @param  {String}   sender Who is sending this?
+ * @param  {String}   title  title of message
+ * @param  {String}   body   body of message
+ * @param  {Function} cb function(error, supported)
  */
 Pebble.alert = function(sender, title, body, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'alert', [sender, title, body]);
+}
+
+/**
+ * Update nonw-playing on Pebble
+ * @param  {String}   artist [description]
+ * @param  {String}   album  [description]
+ * @param  {String}   track  [description]
+ * @param  {Function} cb     cb function(error, supported)
+ */
+Pebble.music = function(artist, album, track, cb){
+    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'music', [artist, album, track]);
 }
 
 ///////  None of these are implemented:
