@@ -44,18 +44,6 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
-        if (action.equals("startGolfOnPebble")){
-            PebbleKit.startAppOnPebble( this.cordova.getActivity().getApplicationContext(), Constants.GOLF_UUID );
-            cb.success(Constants.GOLF_UUID.toString());
-            return true;
-        }
-
-        if (action.equals("startSportsOnPebble")){
-            PebbleKit.startAppOnPebble( this.cordova.getActivity().getApplicationContext(), Constants.SPORTS_UUID );
-            cb.success(Constants.SPORTS_UUID.toString());
-            return true;
-        }
-
         if (action.equals("closeAppOnPebble")){
             UUID uuid = UUID.fromString(args.getString(0));
             PebbleKit.closeAppOnPebble( this.cordova.getActivity().getApplicationContext(), uuid );

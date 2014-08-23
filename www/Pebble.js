@@ -77,24 +77,6 @@ Pebble.closeAppOnPebble = function(uuid, cb){
 };
 
 /**
- * Start built-in golf app
- * @param  {Function} cb function(error, uuid)
- */
-Pebble.startGolfOnPebble = function(cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'startGolfOnPebble', []);
-}
-
-/**
- * Start built-in sports app
- * @param  {Function} cb function(error, uuid)
- */
-Pebble.startSportsOnPebble = function(cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'startSportsOnPebble', []);
-}
-
-/**
  * Register callback for when Pebble is connected
  * @param  {Function} cb function(error, status)
  */
@@ -114,11 +96,11 @@ Pebble.registerReceivedDataHandler = function(uuid, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedDataHandler', []);
 };
 
-Pebble.registerReceivedAckHandler = function(uuid, cb){
+Pebble.registerReceivedAckHandler = function(cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedAckHandler', []);
 };
 
-Pebble.registerReceivedNackHandler = function(uuid, cb){
+Pebble.registerReceivedNackHandler = function(cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedNackHandler', []);
 };
 
@@ -155,5 +137,11 @@ Pebble.sendDataToPebbleWithTransactionId = function(cb){
 Pebble.sendNackToPebble = function(cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendNackToPebble', []);
 };
+
+
+// These probably shouldn't be hardcoded...
+Pebble.SPORTS_UUID = "4dab81a6-d2fc-458a-992c-7a1f3b96a970";
+Pebble.GOLF_UUID = "cf1e816a-9db0-4511-bbb8-f60c48ca8fac";
+
 
 module.exports = Pebble;
