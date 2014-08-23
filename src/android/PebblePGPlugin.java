@@ -3,8 +3,7 @@ package com.jetboystudio.pebble;
 import org.apache.cordova.*;
 import org.json.*;
 import java.util.*;
-import android.content.Intent;
-import android.content.Context;
+import android.content.*;
 
 import com.getpebble.android.kit.*;
 
@@ -12,7 +11,7 @@ public class PebblePGPlugin extends CordovaPlugin {
     private PebbleKit.PebbleDataLogReceiver mDataLogReceiver = null;
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext cb) throws JSONException {
+    public boolean execute(String action, JSONArray args, final CallbackContext cb) throws JSONException {
         if (action.equals("areAppMessagesSupported")){
             cb.success(PebbleKit.areAppMessagesSupported( this.cordova.getActivity().getApplicationContext() ) ? 1 : 0);
             return true;
@@ -41,6 +40,18 @@ public class PebblePGPlugin extends CordovaPlugin {
             UUID uuid = UUID.fromString(args.getString(0));
             PebbleKit.startAppOnPebble( this.cordova.getActivity().getApplicationContext(), uuid );
             cb.success(uuid.toString());
+            return true;
+        }
+
+        if (action.equals("startGolfOnPebble")){
+            PebbleKit.startAppOnPebble( this.cordova.getActivity().getApplicationContext(), Constants.GOLF_UUID );
+            cb.success(Constants.GOLF_UUID.toString());
+            return true;
+        }
+
+        if (action.equals("startSportsOnPebble")){
+            PebbleKit.startAppOnPebble( this.cordova.getActivity().getApplicationContext(), Constants.SPORTS_UUID );
+            cb.success(Constants.SPORTS_UUID.toString());
             return true;
         }
 
@@ -78,14 +89,26 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
 
         if (action.equals("registerPebbleConnectedReceiver")){
-            cb.error("Not Implemented.");
+            PebbleKit.registerPebbleConnectedReceiver(this.cordova.getActivity().getApplicationContext(), new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    cb.success(1);
+                }
+            });
             return true;
         }
 
         if (action.equals("registerPebbleDisconnectedReceiver")){
-            cb.error("Not Implemented.");
+            PebbleKit.registerPebbleDisconnectedReceiver(this.cordova.getActivity().getApplicationContext(), new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    cb.success(0);
+                }
+            });
             return true;
         }
+
+
 
         if (action.equals("registerDataLogReceiver")){
             cb.error("Not Implemented.");
