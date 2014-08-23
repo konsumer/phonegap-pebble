@@ -27,29 +27,11 @@ Pebble.areAppMessagesSupported = function(cb){
 };
 
 /**
- * Start an app on the Pebble
- * @param  {String}   uuid UUID of app to be started
- * @param  {Function} cb   function(error, uuid)
- */
-Pebble.startAppOnPebble = function(uuid, cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'startAppOnPebble', [uuid]);
-};
-
-/**
- * Close an app on the Pebble
- * @param  {String}   uuid UUID of app to be closed
- * @param  {Function} cb   function(error, uuid)
- */
-Pebble.closeAppOnPebble = function(uuid, cb){
-	cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'closeAppOnPebble', [uuid]);
-};
-
-/**
  * Find out if data-logging is supportedon Pebble
  * @param  {Function} cb function(error, supported)
  */
 Pebble.isDataLoggingSupported = function(cb){
-	cordova.exec(function(result){ cb(null, result==1); }, cb, 'Pebble', 'isDataLoggingSupported', []);
+    cordova.exec(function(result){ cb(null, result==1); }, cb, 'Pebble', 'isDataLoggingSupported', []);
 };
 
 /**
@@ -60,19 +42,41 @@ Pebble.isDataLoggingSupported = function(cb){
  * @param  {Function} cb function(error, supported)
  */
 Pebble.alert = function(sender, title, body, cb){
+    cb = cb || function(){};
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'alert', [sender, title, body]);
 }
 
 /**
- * Update nonw-playing on Pebble
+ * Update now-playing on Pebble
  * @param  {String}   artist [description]
  * @param  {String}   album  [description]
  * @param  {String}   track  [description]
  * @param  {Function} cb     cb function(error, supported)
  */
 Pebble.music = function(artist, album, track, cb){
+    cb = cb || function(){};
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'music', [artist, album, track]);
 }
+
+/**
+ * Start an app on the Pebble
+ * @param  {String}   uuid UUID of app to be started
+ * @param  {Function} cb   function(error, uuid)
+ */
+Pebble.startAppOnPebble = function(uuid, cb){
+    cb = cb || function(){};
+    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'startAppOnPebble', [uuid]);
+};
+
+/**
+ * Close an app on the Pebble
+ * @param  {String}   uuid UUID of app to be closed
+ * @param  {Function} cb   function(error, uuid)
+ */
+Pebble.closeAppOnPebble = function(uuid, cb){
+    cb = cb || function(){};
+	cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'closeAppOnPebble', [uuid]);
+};
 
 ///////  None of these are implemented:
 
