@@ -171,7 +171,7 @@ public class PebblePGPlugin extends CordovaPlugin {
         // TODO: untested!
         if (action.equals("sendDataToPebble")){
             UUID uuid = UUID.fromString(args.getString(0));
-            PebbleDictionary data = new PebbleDictionary.fromJson(args.getString(1));
+            PebbleDictionary data = PebbleDictionary.fromJson(args.getString(1));
             PebbleKit.sendDataToPebble(this.cordova.getActivity().getApplicationContext(), uuid, data);
             cb.success(uuid.toString());
             return true;
