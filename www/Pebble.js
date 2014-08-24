@@ -92,6 +92,12 @@ Pebble.registerPebbleDisconnectedReceiver = function(cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerPebbleDisconnectedReceiver', []);
 };
 
+// these need testing
+
+Pebble.sendDataToPebble = function(uuid, data, cb){
+    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendDataToPebble', [uuid, JSON.stringify(data)]);
+};
+
 Pebble.registerReceivedDataHandler = function(uuid, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedDataHandler', [uuid]);
 };
@@ -128,10 +134,6 @@ Pebble.unregisterDataLogReceiver = function(cb){
 
 Pebble.requestDataLogsForApp = function(cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'requestDataLogsForApp', []);
-};
-
-Pebble.sendDataToPebble = function(cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendDataToPebble', []);
 };
 
 Pebble.sendDataToPebbleWithTransactionId = function(cb){

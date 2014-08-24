@@ -156,14 +156,24 @@ public class PebblePGPlugin extends CordovaPlugin {
         if (action.equals("sendAckToPebble")){
             int transactionId = args.getInt(0);
             PebbleKit.sendAckToPebble(this.cordova.getActivity().getApplicationContext(), transactionId);
-            cb.success();
+            cb.success(transactionId);
             return true;
         }
 
+        // TODO: untested!
         if (action.equals("sendNackToPebble")){
             int transactionId = args.getInt(0);
             PebbleKit.sendNackToPebble(this.cordova.getActivity().getApplicationContext(), transactionId);
-            cb.success();
+            cb.success(transactionId);
+            return true;
+        }
+
+        // TODO: untested!
+        if (action.equals("sendDataToPebble")){
+            UUID uuid = UUID.fromString(args.getString(0));
+            PebbleDictionary data = new PebbleDictionary.fromJson(args.getString(1));
+            PebbleKit.sendDataToPebble(this.cordova.getActivity().getApplicationContext(), uuid, data);
+            cb.success(uuid);
             return true;
         }
 
@@ -185,11 +195,6 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
 
         if (action.equals("requestDataLogsForApp")){
-            cb.error("Not Implemented.");
-            return true;
-        }
-
-        if (action.equals("sendDataToPebble")){
             cb.error("Not Implemented.");
             return true;
         }
