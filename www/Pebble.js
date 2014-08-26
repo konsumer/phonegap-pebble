@@ -94,7 +94,7 @@ Pebble.registerPebbleDisconnectedReceiver = function(cb){
 
 /**
  * Send data to Pebble
- * @param  {[type]}   uuid UUID of app to receive data
+ * @param  {String}   uuid UUID of app to receive data
  * @param  {Array}    data Data to send, should be in this format: [{type:"", key:"", value:"", length:""}]
  * @param  {Function} cb   function(error, uuid)
  */
@@ -104,12 +104,12 @@ Pebble.sendDataToPebble = function(uuid, data, cb){
 
 /**
  * Send data to Pebble, keyed by transactionId
- * @param  {[type]}   uuid UUID of app to receive data
+ * @param  {String}   uuid UUID of app to receive data
  * @param  {Array}    data Data to send, should be in this format: [{type:"", key:"", value:"", length:""}]
  * @param  {Integer}  transactionId ID for NACK & ACK Stuff
  * @param  {Function} cb   function(error, uuid)
  */
-Pebble.sendDataToPebbleWithTransactionId = function(cb){
+Pebble.sendDataToPebbleWithTransactionId = function(uuid, data, transactionId, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendDataToPebbleWithTransactionId', [uuid, JSON.stringify(data), transactionId]);
 };
 
