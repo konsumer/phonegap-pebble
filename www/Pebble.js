@@ -92,11 +92,19 @@ Pebble.registerPebbleDisconnectedReceiver = function(cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerPebbleDisconnectedReceiver', []);
 };
 
-// these need testing
-
+/**
+ * Send data to 
+ * @param  {[type]}   uuid UUID of app to receive data
+ * @param  {Array}    data Data to send, should be in this format: [{type:"", key:"", value:"", length:""}]
+ * @param  {Function} cb   function(error, uuid)
+ */
 Pebble.sendDataToPebble = function(uuid, data, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendDataToPebble', [uuid, JSON.stringify(data)]);
 };
+
+// these need testing
+
+
 
 Pebble.registerReceivedDataHandler = function(uuid, cb){
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedDataHandler', [uuid]);
