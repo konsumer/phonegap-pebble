@@ -93,7 +93,7 @@ Pebble.registerPebbleDisconnectedReceiver = function(cb){
 };
 
 /**
- * Send data to 
+ * Send data to Pebble
  * @param  {[type]}   uuid UUID of app to receive data
  * @param  {Array}    data Data to send, should be in this format: [{type:"", key:"", value:"", length:""}]
  * @param  {Function} cb   function(error, uuid)
