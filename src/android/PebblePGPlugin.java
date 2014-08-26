@@ -4,6 +4,7 @@ import org.apache.cordova.*;
 import org.json.*;
 import java.util.*;
 import android.content.*;
+import android.util.*;
 
 import com.getpebble.android.kit.*;
 import com.getpebble.android.kit.util.*;
@@ -97,6 +98,23 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
+        if (action.equals("sendDataToPebble")){
+            UUID uuid = UUID.fromString(args.getString(0));
+            PebbleDictionary data = PebbleDictionary.fromJson(args.getString(1));
+            PebbleKit.sendDataToPebble(this.cordova.getActivity().getApplicationContext(), uuid, data);
+            cb.success(uuid.toString());
+            return true;
+        }
+
+        if (action.equals("sendDataToPebbleWithTransactionId")){
+            UUID uuid = UUID.fromString(args.getString(0));
+            int transactionId = args.getInt(1);
+            PebbleDictionary data = PebbleDictionary.fromJson(args.getString(1));
+            PebbleKit.sendDataToPebbleWithTransactionId(this.cordova.getActivity().getApplicationContext(), uuid, data, transactionId);
+            cb.success(uuid.toString());
+            return true;
+        }
+
         // TODO: untested!
         if (action.equals("registerReceivedDataHandler")){
             UUID uuid = UUID.fromString(args.getString(0));
@@ -168,15 +186,6 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
-        // TODO: untested!
-        if (action.equals("sendDataToPebble")){
-            UUID uuid = UUID.fromString(args.getString(0));
-            PebbleDictionary data = PebbleDictionary.fromJson(args.getString(1));
-            PebbleKit.sendDataToPebble(this.cordova.getActivity().getApplicationContext(), uuid, data);
-            cb.success(uuid.toString());
-            return true;
-        }
-
         /////
 
         if (action.equals("registerDataLogReceiver")){
@@ -199,10 +208,7 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
-        if (action.equals("sendDataToPebbleWithTransactionId")){
-            cb.error("Not Implemented.");
-            return true;
-        }
+        
 
         return false;
     }
