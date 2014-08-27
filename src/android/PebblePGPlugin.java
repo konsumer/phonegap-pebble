@@ -5,6 +5,7 @@ import org.json.*;
 import java.util.*;
 import android.content.*;
 import android.util.*;
+import android.graphics.*;
 
 import com.getpebble.android.kit.*;
 import com.getpebble.android.kit.util.*;
@@ -118,14 +119,23 @@ public class PebblePGPlugin extends CordovaPlugin {
 
         // TODO: untested!
         if (action.equals("customizeWatchApp")){
-            int type = args.getInt(0);
+            String type = args.getString(0);
             String name = args.getString(1);
+
+            Constants.PebbleAppType realType = Constants.PebbleAppType.OTHER;
+
+            if (type.equals("sports")){
+                realType = Constants.PebbleAppType.SPORTS;
+            }
+            if (type.equals("golf")){
+                realType = Constants.PebbleAppType.GOLF;
+            }
             
             byte[] decodedByte = Base64.decode(args.getString(2), 0);
             Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
 
-            PebbleKit.customizeWatchApp(this.cordova.getActivity().getApplicationContext(), type, name, icon);
-            cb.success(uuid.toString());
+            PebbleKit.customizeWatchApp(this.cordova.getActivity().getApplicationContext(), realType, name, icon);
+            cb.success();
             return true;
         }
 

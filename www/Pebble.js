@@ -121,14 +121,8 @@ Pebble.sendDataToPebbleWithTransactionId = function(uuid, data, transactionId, c
  * @param  {Function} cb   function(error)
  */
 Pebble.customizeWatchApp = function(type, name, icon, cb){
-    var types = {
-        "golf": 0x01,
-        "sports": 0x00,
-        "other": 0xff
-    }
-
     Pebble.base64image(icon.src || icon, 'image/png', function(dataURL){
-        cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'customizeWatchApp', [types[type], name, dataURL]);
+        cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'customizeWatchApp', [type, name, dataURL]);
     })
 
 };
