@@ -106,11 +106,25 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
+        // TODO: untested!
         if (action.equals("sendDataToPebbleWithTransactionId")){
             UUID uuid = UUID.fromString(args.getString(0));
             int transactionId = args.getInt(1);
             PebbleDictionary data = PebbleDictionary.fromJson(args.getString(1));
             PebbleKit.sendDataToPebbleWithTransactionId(this.cordova.getActivity().getApplicationContext(), uuid, data, transactionId);
+            cb.success(uuid.toString());
+            return true;
+        }
+
+        // TODO: untested!
+        if (action.equals("customizeWatchApp")){
+            int type = args.getInt(0);
+            String name = args.getString(1);
+            
+            byte[] decodedByte = Base64.decode(args.getString(2), 0);
+            Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+
+            PebbleKit.customizeWatchApp(this.cordova.getActivity().getApplicationContext(), type, name, icon);
             cb.success(uuid.toString());
             return true;
         }
@@ -194,11 +208,6 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
 
         if (action.equals("unregisterDataLogReceiver")){
-            cb.error("Not Implemented.");
-            return true;
-        }
-
-        if (action.equals("customizeWatchApp")){
             cb.error("Not Implemented.");
             return true;
         }
