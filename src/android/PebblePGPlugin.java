@@ -126,7 +126,7 @@ public class PebblePGPlugin extends CordovaPlugin {
             Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
 
             PebbleKit.customizeWatchApp(this.cordova.getActivity().getApplicationContext(), type, name, icon);
-            cb.success(uuid.toString());
+            cb.success();
             return true;
         }
 
