@@ -121,14 +121,14 @@ public class PebblePGPlugin extends CordovaPlugin {
         if (action.equals("customizeWatchApp")){
             String stype = args.getString(o);
             String name = args.getString(1);
-            PebbleAppType type = PebbleAppType.OTHER;
+            Constants.PebbleAppType type = Constants.PebbleAppType.OTHER;
 
             if (stype.equals("sports")){
-                type = PebbleAppType.SPORTS;
+                type = Constants.PebbleAppType.SPORTS;
             }
 
             if (stype.equals("golf")){
-                type = PebbleAppType.GOLF;
+                type = Constants.PebbleAppType.GOLF;
             }
             
             byte[] decodedByte = Base64.decode(args.getString(2), 0);
