@@ -119,23 +119,14 @@ public class PebblePGPlugin extends CordovaPlugin {
 
         // TODO: untested!
         if (action.equals("customizeWatchApp")){
-            String type = args.getString(0);
+            int type = args.getInt(0);
             String name = args.getString(1);
-
-            Constants.PebbleAppType realType = Constants.PebbleAppType.OTHER;
-
-            if (type.equals("sports")){
-                realType = Constants.PebbleAppType.SPORTS;
-            }
-            if (type.equals("golf")){
-                realType = Constants.PebbleAppType.GOLF;
-            }
             
             byte[] decodedByte = Base64.decode(args.getString(2), 0);
             Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
 
-            PebbleKit.customizeWatchApp(this.cordova.getActivity().getApplicationContext(), realType, name, icon);
-            cb.success();
+            PebbleKit.customizeWatchApp(this.cordova.getActivity().getApplicationContext(), type, name, icon);
+            cb.success(uuid.toString());
             return true;
         }
 
@@ -148,7 +139,7 @@ public class PebblePGPlugin extends CordovaPlugin {
                     try{
                         JSONObject json = new JSONObject();
                         json.put("transaction", transactionId);
-                        json.put("data", data);
+                        json.put("data", data.toJsonString());
                         cb.success(json);
                     } catch(Exception e){
                         cb.error(e.toString());
@@ -165,9 +156,7 @@ public class PebblePGPlugin extends CordovaPlugin {
                 @Override
                 public void receiveAck(Context context, int transactionId) {
                     try{
-                        JSONObject json = new JSONObject();
-                        json.put("transaction", transactionId);
-                        cb.success(json);
+                        cb.success(transactionId);
                     } catch(Exception e){
                         cb.error(e.toString());
                     }
@@ -183,9 +172,7 @@ public class PebblePGPlugin extends CordovaPlugin {
                 @Override
                 public void receiveNack(Context context, int transactionId) {
                     try{
-                        JSONObject json = new JSONObject();
-                        json.put("transaction", transactionId);
-                        cb.success(json);
+                        cb.success(transactionId);
                     } catch(Exception e){
                         cb.error(e.toString());
                     }

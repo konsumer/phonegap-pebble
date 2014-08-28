@@ -151,7 +151,7 @@ Pebble.base64image = function(src, outputFormat, cb){
 // these need testing
 
 Pebble.registerReceivedDataHandler = function(uuid, cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedDataHandler', [uuid]);
+    cordova.exec(function(result){ result.data = JSON.parse(result.data); cb(null, result); }, cb, 'Pebble', 'registerReceivedDataHandler', [uuid]);
 };
 
 Pebble.registerReceivedAckHandler = function(uuid, cb){
