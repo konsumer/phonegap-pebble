@@ -99,6 +99,7 @@ Pebble.registerPebbleDisconnectedReceiver = function(cb){
  * @param  {Function} cb   function(error, uuid)
  */
 Pebble.sendDataToPebble = function(uuid, data, cb){
+    cb = cb || function(){};
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendDataToPebble', [uuid, JSON.stringify(data)]);
 };
 
@@ -110,6 +111,7 @@ Pebble.sendDataToPebble = function(uuid, data, cb){
  * @param  {Function} cb   function(error, uuid)
  */
 Pebble.sendDataToPebbleWithTransactionId = function(uuid, data, transactionId, cb){
+    cb = cb || function(){};
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendDataToPebbleWithTransactionId', [uuid, JSON.stringify(data), transactionId]);
 };
 
@@ -121,6 +123,7 @@ Pebble.sendDataToPebbleWithTransactionId = function(uuid, data, transactionId, c
  * @param  {Function} cb   function(error)
  */
 Pebble.customizeWatchApp = function(type, name, icon, cb){
+    cb = cb || function(){};
     Pebble.base64image(icon.src || icon, 'image/png', function(dataURL){
         cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'customizeWatchApp', [type, name, dataURL]);
     })
@@ -151,7 +154,10 @@ Pebble.base64image = function(src, outputFormat, cb){
 // these need testing
 
 Pebble.registerReceivedDataHandler = function(uuid, cb){
-    cordova.exec(function(result){ result.data = JSON.parse(result.data); cb(null, result); }, cb, 'Pebble', 'registerReceivedDataHandler', [uuid]);
+    cordova.exec(function(result){
+        result.data = JSON.parse(result.data);
+        cb(null, result);
+    }, cb, 'Pebble', 'registerReceivedDataHandler', [uuid]);
 };
 
 Pebble.registerReceivedAckHandler = function(uuid, cb){
@@ -163,10 +169,12 @@ Pebble.registerReceivedNackHandler = function(uuid, cb){
 };
 
 Pebble.sendAckToPebble = function(transactionId, cb){
+    cb = cb || function(){};
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendAckToPebble', [transactionId]);
 };
 
 Pebble.sendNackToPebble = function(transactionId, cb){
+    cb = cb || function(){};
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendNackToPebble', [transactionId]);
 };
 
@@ -181,6 +189,7 @@ Pebble.unregisterDataLogReceiver = function(cb){
 };
 
 Pebble.requestDataLogsForApp = function(cb){
+    cb = cb || function(){};
     cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'requestDataLogsForApp', []);
 };
 
