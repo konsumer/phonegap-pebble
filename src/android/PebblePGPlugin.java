@@ -11,27 +11,65 @@ import com.getpebble.android.kit.*;
 import com.getpebble.android.kit.util.*;
 
 public class PebblePGPlugin extends CordovaPlugin {
+    public static final String TAG = "PebblePGPlugin";
     private PebbleKit.PebbleDataLogReceiver mDataLogReceiver = null;
+    private static CordovaWebView gWebView;
+
+    /**
+     * Gets the application context from cordova's main activity.
+     * @return the application context
+     */
+    private Context getApplicationContext() {
+        return this.cordova.getActivity().getApplicationContext();
+    }
+
+    /**
+     * Fire a javascript document event name Pebble.method
+     * @param method the name of the sub-event (ie: connect, disconnect, etc)
+     * @param optional detail the detail-object for the event
+     */
+    public static void dispatchEvent(String method, JSONObject detail) {
+        gWebView.sendJavascript("javascript:document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': " + detail.toString() + "}))");
+    }
+    public static void dispatchEvent(String method) {
+        gWebView.sendJavascript("javascript:document.dispatchEvent(new CustomEvent('Pebble." + method + "'))");
+    }
 
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext cb) throws JSONException {
+        gWebView = this.webView;
+
+        Log.v(TAG, "execute: action=" + action + " " + args.toString());
+
+        /**
+         * Call success callback with message-support 0/1
+         */
         if (action.equals("areAppMessagesSupported")){
-            cb.success(PebbleKit.areAppMessagesSupported( this.cordova.getActivity().getApplicationContext() ) ? 1 : 0);
+            cb.success(PebbleKit.areAppMessagesSupported(getApplicationContext()) ? 1 : 0);
             return true;
         }
 
+        /**
+         * Call success callback with datalog-support 0/1
+         */
         if (action.equals("isDataLoggingSupported")){
-            cb.success(PebbleKit.isDataLoggingSupported( this.cordova.getActivity().getApplicationContext() ) ? 1 : 0);
+            cb.success(PebbleKit.isDataLoggingSupported(getApplicationContext()) ? 1 : 0);
             return true;
         }
 
+        /**
+         * Call success callback with connected-status 0/1
+         */
         if (action.equals("isWatchConnected")){
-            cb.success(PebbleKit.isWatchConnected( this.cordova.getActivity().getApplicationContext() ) ? 1 : 0);
+            cb.success(PebbleKit.isWatchConnected(getApplicationContext()) ? 1 : 0);
             return true;
         }
 
+        /**
+         * Call success callback with version-info in JSON object
+         */
         if (action.equals("getWatchFWVersion")){
-            PebbleKit.FirmwareVersionInfo fw = PebbleKit.getWatchFWVersion(this.cordova.getActivity().getApplicationContext());
+            PebbleKit.FirmwareVersionInfo fw = PebbleKit.getWatchFWVersion(getApplicationContext());
             JSONObject json = new JSONObject();
             json.put("version", fw.getMajor() + "." + fw.getMinor() + "." + fw.getPoint());
             json.put("tag", fw.getTag());
@@ -39,20 +77,29 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
+        /**
+         * Start an app on Pebble, by UUID
+         */
         if (action.equals("startAppOnPebble")){
             UUID uuid = UUID.fromString(args.getString(0));
-            PebbleKit.startAppOnPebble( this.cordova.getActivity().getApplicationContext(), uuid );
-            cb.success(uuid.toString());
+            PebbleKit.startAppOnPebble(getApplicationContext(), uuid );
+            cb.success();
             return true;
         }
 
+        /**
+         * Stop an app on Pebble, by UUID
+         */
         if (action.equals("closeAppOnPebble")){
             UUID uuid = UUID.fromString(args.getString(0));
-            PebbleKit.closeAppOnPebble( this.cordova.getActivity().getApplicationContext(), uuid );
-            cb.success(uuid.toString());
+            PebbleKit.closeAppOnPebble(getApplicationContext(), uuid );
+            cb.success();
             return true;
         }
 
+        /**
+         * Trigger a Pebble alert
+         */
         if (action.equals("alert")){
             final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
             final Map data = new HashMap();
@@ -65,7 +112,8 @@ public class PebblePGPlugin extends CordovaPlugin {
             i.putExtra("sender", args.getString(0));
             i.putExtra("notificationData", notificationData);
 
-            this.cordova.getActivity().getApplicationContext().sendBroadcast(i);
+            getApplicationContext().sendBroadcast(i);
+            cb.success();
             return true;
         }
 
@@ -75,156 +123,60 @@ public class PebblePGPlugin extends CordovaPlugin {
             i.putExtra("album", args.getString(1));
             i.putExtra("track", args.getString(2));
 
-            this.cordova.getActivity().getApplicationContext().sendBroadcast(i);
-            return true;
-        }
-
-        if (action.equals("registerPebbleConnectedReceiver")){
-            PebbleKit.registerPebbleConnectedReceiver(this.cordova.getActivity().getApplicationContext(), new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    cb.success(1);
-                }
-            });
-            return true;
-        }
-
-        if (action.equals("registerPebbleDisconnectedReceiver")){
-            PebbleKit.registerPebbleDisconnectedReceiver(this.cordova.getActivity().getApplicationContext(), new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    cb.success(0);
-                }
-            });
-            return true;
-        }
-
-        if (action.equals("sendDataToPebble")){
-            UUID uuid = UUID.fromString(args.getString(0));
-            PebbleDictionary data = PebbleDictionary.fromJson(args.getString(1));
-            PebbleKit.sendDataToPebble(this.cordova.getActivity().getApplicationContext(), uuid, data);
-            cb.success(uuid.toString());
-            return true;
-        }
-
-        // TODO: untested!
-        if (action.equals("sendDataToPebbleWithTransactionId")){
-            UUID uuid = UUID.fromString(args.getString(0));
-            int transactionId = args.getInt(1);
-            PebbleDictionary data = PebbleDictionary.fromJson(args.getString(1));
-            PebbleKit.sendDataToPebbleWithTransactionId(this.cordova.getActivity().getApplicationContext(), uuid, data, transactionId);
-            cb.success(uuid.toString());
-            return true;
-        }
-
-        // TODO: untested!
-        if (action.equals("customizeWatchApp")){
-            String stype = args.getString(0);
-            String name = args.getString(1);
-            Constants.PebbleAppType type = Constants.PebbleAppType.OTHER;
-
-            if (stype.equals("sports")){
-                type = Constants.PebbleAppType.SPORTS;
-            }
-
-            if (stype.equals("golf")){
-                type = Constants.PebbleAppType.GOLF;
-            }
-            
-            byte[] decodedByte = Base64.decode(args.getString(2), 0);
-            Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
-
-            PebbleKit.customizeWatchApp(this.cordova.getActivity().getApplicationContext(), type, name, icon);
+            getApplicationContext().sendBroadcast(i);
             cb.success();
             return true;
         }
 
-        // TODO: untested!
-        if (action.equals("registerReceivedDataHandler")){
-            UUID uuid = UUID.fromString(args.getString(0));
-            PebbleKit.registerReceivedDataHandler(this.cordova.getActivity().getApplicationContext(), new PebbleKit.PebbleDataReceiver(uuid) {
+        /**
+         * Register a callback when watch is connected
+         */
+        if (action.equals("registerPebbleConnectedReceiver")){
+            PebbleKit.registerPebbleConnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
                 @Override
-                public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
-                    try{
-                        JSONObject json = new JSONObject();
-                        json.put("transaction", transactionId);
-                        json.put("data", data.toJsonString());
-                        cb.success(json);
-                    } catch(Exception e){
-                        cb.error(e.toString());
-                    }
+                public void onReceive(Context context, Intent intent) {
+                    dispatchEvent('connected');
                 }
             });
+            cb.success();
             return true;
         }
 
-        // TODO: untested!
-        if (action.equals("registerReceivedAckHandler")){
-            UUID uuid = UUID.fromString(args.getString(0));
-            PebbleKit.registerReceivedAckHandler(this.cordova.getActivity().getApplicationContext(), new PebbleKit.PebbleAckReceiver(uuid) {
+        /**
+         * Register a callback when watch is disconnected
+         */
+        if (action.equals("registerPebbleDisconnectedReceiver")){
+            PebbleKit.registerPebbleDisconnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
                 @Override
-                public void receiveAck(Context context, int transactionId) {
-                    try{
-                        cb.success(transactionId);
-                    } catch(Exception e){
-                        cb.error(e.toString());
-                    }
+                public void onReceive(Context context, Intent intent) {
+                    dispatchEvent('disconnected');
                 }
             });
+            cb.success();
             return true;
         }
 
-        // TODO: untested!
-        if (action.equals("registerReceivedNackHandler")){
-            UUID uuid = UUID.fromString(args.getString(0));
-            PebbleKit.registerReceivedNackHandler(this.cordova.getActivity().getApplicationContext(), new PebbleKit.PebbleNackReceiver(uuid) {
-                @Override
-                public void receiveNack(Context context, int transactionId) {
-                    try{
-                        cb.success(transactionId);
-                    } catch(Exception e){
-                        cb.error(e.toString());
-                    }
-                }
-            });
+        /**
+         * Unregister a callback when watch is connected
+         */
+        if (action.equals("unregisterPebbleConnectedReceiver")){
+            PebbleKit.registerPebbleConnectedReceiver(getApplicationContext(), null);
+            cb.success();
             return true;
         }
 
-        // TODO: untested!
-        if (action.equals("sendAckToPebble")){
-            int transactionId = args.getInt(0);
-            PebbleKit.sendAckToPebble(this.cordova.getActivity().getApplicationContext(), transactionId);
-            cb.success(transactionId);
-            return true;
-        }
-
-        // TODO: untested!
-        if (action.equals("sendNackToPebble")){
-            int transactionId = args.getInt(0);
-            PebbleKit.sendNackToPebble(this.cordova.getActivity().getApplicationContext(), transactionId);
-            cb.success(transactionId);
-            return true;
-        }
-
-        /////
-
-        if (action.equals("registerDataLogReceiver")){
-            cb.error("Not Implemented.");
-            return true;
-        }
-
-        if (action.equals("unregisterDataLogReceiver")){
-            cb.error("Not Implemented.");
-            return true;
-        }
-
-        if (action.equals("requestDataLogsForApp")){
-            cb.error("Not Implemented.");
+        /**
+         * Unregister a callback when watch is disconnected
+         */
+        if (action.equals("unregisterPebbleDisconnectedReceiver")){
+            PebbleKit.registerPebbleDisconnectedReceiver(getApplicationContext(), null);
+            cb.success();
             return true;
         }
 
         
 
+        // action not found
         return false;
     }
 }

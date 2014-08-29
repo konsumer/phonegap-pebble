@@ -1,199 +1,157 @@
-var Pebble = {};
+(function (){
+    var Pebble = function(){},
+        dummy = function(){},
+        genericError = function(err){ console.error(err); };
 
-/**
- * Check if Pebble is currently connected
- * @param  {Function} cb function(error, connected)
- */
-Pebble.isWatchConnected = function(cb){
-    cordova.exec(function(result){ cb(null, result==1); }, cb, 'Pebble', 'isWatchConnected', []);
-};
-
-/**
- * Get information about firmware installed on Pebble
- * @param  {Function} cb function(error, info)
- */
-Pebble.getWatchFWVersion = function(cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'getWatchFWVersion', []);
-};
-
-/**
- * Find out if app-messages are supported
- * @param  {Function} cb function(error, supported)
- */
-Pebble.areAppMessagesSupported = function(cb){
-    cordova.exec(function(result){ cb(null, result==1); }, cb, 'Pebble', 'areAppMessagesSupported', []);
-};
-
-/**
- * Find out if data-logging is supportedon Pebble
- * @param  {Function} cb function(error, supported)
- */
-Pebble.isDataLoggingSupported = function(cb){
-    cordova.exec(function(result){ cb(null, result==1); }, cb, 'Pebble', 'isDataLoggingSupported', []);
-};
-
-/**
- * Send an alert to Pebble
- * @param  {String}   sender Who is sending this?
- * @param  {String}   title  title of message
- * @param  {String}   body   body of message
- * @param  {Function} cb function(error, supported)
- */
-Pebble.alert = function(sender, title, body, cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'alert', [sender, title, body]);
-}
-
-/**
- * Update now-playing on Pebble
- * @param  {String}   artist [description]
- * @param  {String}   album  [description]
- * @param  {String}   track  [description]
- * @param  {Function} cb     cb function(error, supported)
- */
-Pebble.music = function(artist, album, track, cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'music', [artist, album, track]);
-}
-
-/**
- * Start an app on the Pebble
- * @param  {String}   uuid UUID of app to be started
- * @param  {Function} cb   function(error, uuid)
- */
-Pebble.startAppOnPebble = function(uuid, cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'startAppOnPebble', [uuid]);
-};
-
-/**
- * Close an app on the Pebble
- * @param  {String}   uuid UUID of app to be closed
- * @param  {Function} cb   function(error, uuid)
- */
-Pebble.closeAppOnPebble = function(uuid, cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'closeAppOnPebble', [uuid]);
-};
-
-/**
- * Register callback for when Pebble is connected
- * @param  {Function} cb function(error, status)
- */
-Pebble.registerPebbleConnectedReceiver = function(cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerPebbleConnectedReceiver', []);
-};
-
-/**
- * Register callback for when Pebble is disconnected
- * @param  {Function} cb function(error, status)
- */
-Pebble.registerPebbleDisconnectedReceiver = function(cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerPebbleDisconnectedReceiver', []);
-};
-
-/**
- * Send data to Pebble
- * @param  {String}   uuid UUID of app to receive data
- * @param  {Array}    data Data to send, should be in this format: [{type:"", key:"", value:"", length:""}]
- * @param  {Function} cb   function(error, uuid)
- */
-Pebble.sendDataToPebble = function(uuid, data, cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendDataToPebble', [uuid, JSON.stringify(data)]);
-};
-
-/**
- * Send data to Pebble, keyed by transactionId
- * @param  {String}   uuid UUID of app to receive data
- * @param  {Array}    data Data to send, should be in this format: [{type:"", key:"", value:"", length:""}]
- * @param  {Integer}  transactionId ID for NACK & ACK Stuff
- * @param  {Function} cb   function(error, uuid)
- */
-Pebble.sendDataToPebbleWithTransactionId = function(uuid, data, transactionId, cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendDataToPebbleWithTransactionId', [uuid, JSON.stringify(data), transactionId]);
-};
-
-/**
- * Customize a built-in PebbleKit watch-app
- * @param  {String}   type "golf", "sports", or "other"
- * @param  {String}   name New name
- * @param  {Image}    icon An image object for the icon
- * @param  {Function} cb   function(error)
- */
-Pebble.customizeWatchApp = function(type, name, icon, cb){
-    cb = cb || function(){};
-    Pebble.base64image(icon.src || icon, 'image/png', function(dataURL){
-        cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'customizeWatchApp', [type, name, dataURL]);
-    })
-
-};
-
-/**
- * make image, get base64 string for it
- * @param  {String}   src The URL of the image
- * @param  {Function} cb   function(dataURL)
- */
-Pebble.base64image = function(src, outputFormat, cb){
-    var canvas = document.createElement('CANVAS'),
-        ctx = canvas.getContext('2d'),
-        img = new Image;
-    img.onload = function(){
-        var dataURL;
-        canvas.height = img.height;
-        canvas.width = img.width;
-        ctx.drawImage(img, 0, 0);
-        dataURL = canvas.toDataURL(outputFormat);
-        canvas = null;
-        cb(dataURL);
+    /**
+     * make image, get base64 string for it
+     * @param  {String}   src The URL of the image
+     * @param  {Function} cb   function(dataURL)
+     */
+    Pebble.prototype.base64image = function(src, outputFormat, cb){
+        var canvas = document.createElement('CANVAS'),
+            ctx = canvas.getContext('2d'),
+            img = new Image;
+        img.onload = function(){
+            var dataURL;
+            canvas.height = img.height;
+            canvas.width = img.width;
+            ctx.drawImage(img, 0, 0);
+            dataURL = canvas.toDataURL(outputFormat);
+            canvas = null;
+            cb(dataURL);
+        };
+        img.src = src;
     };
-    img.src = src;
-};
 
-// these need testing
+    /**
+     * Find out if app-messages are supported
+     * @param  {Function} success called with answer
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.areAppMessagesSupported = function(success, error){
+        cordova.exec(success, error || genericError, 'Pebble', 'areAppMessagesSupported', []);
+    };
 
-Pebble.registerReceivedDataHandler = function(uuid, cb){
-    cordova.exec(function(result){
-        result.data = JSON.parse(result.data);
-        cb(null, result);
-    }, cb, 'Pebble', 'registerReceivedDataHandler', [uuid]);
-};
+    /**
+     * Find out if data-logging is supportedon Pebble
+     * @param  {Function} success called with answer
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.isDataLoggingSupported = function(success, error){
+        cordova.exec(success, error || genericError, 'Pebble', 'isDataLoggingSupported', []);
+    };
 
-Pebble.registerReceivedAckHandler = function(uuid, cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedAckHandler', [uuid]);
-};
+    /**
+     * Check if Pebble is currently connected
+     * @param  {Function} success called with answer
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.isWatchConnected = function(success, error){
+        cordova.exec(success, error || genericError, 'Pebble', 'isWatchConnected', []);
+    };
 
-Pebble.registerReceivedNackHandler = function(uuid, cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerReceivedNackHandler', [uuid]);
-};
+    /**
+     * Get information about firmware installed on Pebble
+     * @param  {Function} success called with answer
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.getWatchFWVersion = function(success, error){
+        cordova.exec(success, error || genericError, 'Pebble', 'getWatchFWVersion', []);
+    };
 
-Pebble.sendAckToPebble = function(transactionId, cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendAckToPebble', [transactionId]);
-};
+    /**
+     * Start an app on the Pebble
+     * @param  {String}   uuid UUID of app to be started
+     * @param  {Function} success (optional) called when java returns
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.startAppOnPebble = function(uuid, success, error){
+        cb = cb || function(){};
+        cordova.exec(success:success||dummy, error||genericError, 'Pebble', 'startAppOnPebble', [uuid]);
+    };
 
-Pebble.sendNackToPebble = function(transactionId, cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'sendNackToPebble', [transactionId]);
-};
+    /**
+     * Close an app on the Pebble
+     * @param  {String}   uuid    UUID of app to be closed
+     * @param  {Function} success (optional) called when java returns
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.closeAppOnPebble = function(uuid, success, error){
+        cb = cb || function(){};
+        cordova.exec(success:success||dummy, error||genericError, 'Pebble', 'closeAppOnPebble', [uuid]);
+    };
 
-///////  None of these are implemented:
+    /**
+     * Send an alert to Pebble
+     * @param  {String}   sender  Who is sending this?
+     * @param  {String}   title   title of message
+     * @param  {String}   body    body of message
+     * @param  {Function} success (optional) called when java returns
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.alert = function(sender, title, body, success, error){
+        cb = cb || function(){};
+        cordova.exec(success:success||dummy, error||genericError, 'Pebble', 'alert', [sender, title, body]);
+    }
 
-Pebble.registerDataLogReceiver = function(uuid, cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'registerDataLogReceiver', [uuid]);
-};
+    /**
+     * Update now-playing on Pebble
+     * @param  {String}   artist  [description]
+     * @param  {String}   album   [description]
+     * @param  {String}   track   [description]
+     * @param  {Function} success (optional) called when java returns
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.music = function(artist, album, track, success, error){
+        cb = cb || function(){};
+        cordova.exec(success:success||dummy, error||genericError, 'Pebble', 'music', [artist, album, track]);
+    }
 
-Pebble.unregisterDataLogReceiver = function(cb){
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'unregisterDataLogReceiver', []);
-};
+    /**
+     * Tell java to listen for pebble connects. You can document.addEventListener("Pebble.connect",function(e){  });
+     * @param  {Function} success (optional) called when java returns
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.registerConnect = function(success, error){
+        cordova.exec(success:success||dummy, error||genericError, 'Pebble', 'registerPebbleConnectedReceiver', []);
+    }
 
-Pebble.requestDataLogsForApp = function(cb){
-    cb = cb || function(){};
-    cordova.exec(function(result){ cb(null, result); }, cb, 'Pebble', 'requestDataLogsForApp', []);
-};
+    /**
+     * Tell java to listen for pebble disconnects. You can document.addEventListener("Pebble.disconnect",function(e){  });
+     * @param  {Function} success (optional) called when java returns
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.registerDisconnect = function(success, error){
+        cordova.exec(success:success||dummy, error||genericError, 'Pebble', 'registerPebbleDisconnectedReceiver', []);
+    }
+
+    /**
+     * Tell java not to listen for pebble connects.
+     * @param  {Function} success (optional) called when java returns
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.unregisterConnect = function(success, error){
+        cordova.exec(success:success||dummy, error||genericError, 'Pebble', 'unregisterPebbleConnectedReceiver', []);
+    }
+
+    /**
+     * Tell java not to listen for pebble disconnects.
+     * @param  {Function} success (optional) called when java returns
+     * @param  {Function} error   (optional) called when java returns with problem
+     */
+    Pebble.prototype.unregisterDisconnect = function(success, error){
+        cordova.exec(success:success||dummy, error||genericError, 'Pebble', 'unregisterPebbleDisconnectedReceiver', []);
+    }
 
 
+    // export interface
+    if (window){
+        if(!window.plugins) window.plugins = {};
+        if (!window.plugins.Pebble) window.plugins.Pebble = new Pebble();
+    }
+    if (typeof module != 'undefined' && module.exports) {
+      module.exports = Pebble;
+    }
 
-
-module.exports = Pebble;
+})();
