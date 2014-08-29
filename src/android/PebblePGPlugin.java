@@ -135,7 +135,7 @@ public class PebblePGPlugin extends CordovaPlugin {
             PebbleKit.registerPebbleConnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    dispatchEvent('connected');
+                    dispatchEvent("connected");
                 }
             });
             cb.success();
@@ -149,7 +149,7 @@ public class PebblePGPlugin extends CordovaPlugin {
             PebbleKit.registerPebbleDisconnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    dispatchEvent('disconnected');
+                    dispatchEvent("disconnected");
                 }
             });
             cb.success();
