@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <title>Pebble Demo</title>
+    </head>
+    <body>
+        <div class="app">
+            <h1>Pebble Demo</h1>
+            <p><strong>connected?></strong> <span id="connected">?</span></p>
+            <p><strong>data-logging??></strong> <span id="data">?</span></p>
+            <p><strong>app-messages?></strong> <span id="messages">?</span></p>
+            
+            <textarea id="info"></textarea>
+
+            <button id="sportsOn">trigger sports app</button>
+            <button id="sportsOff">close sports app</button>
+        </div>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript">
+            var eConnected = document.getElementById('connected');
+            var eInfo = document.getElementById('info');
+            var eData = document.getElementById('data');
+            var eMessages = document.getElementById('messages');
+            var eSportsOn = document.getElementById('sportsOn');
+            var eSportsOff = document.getElementById('sportsOff');
+
+            // listeners for Pebble connect, update info
+            document.addEventListener("Pebble.connect",function(e){
+                eConnected.innerHTML = 'yes';
+                Pebble.getWatchFWVersion(function(info){
+                    eInfo.innerHTML = JSON.stringify(info, null, '\t');
+                });
+                Pebble.isDataLoggingSupported(function(supported){
+                    eData.innerHTML = (supported) ? 'yes' : 'no';
+                });
+                Pebble.areAppMessagesSupported(function(supported){
+                    eMessages.innerHTML = (supported) ? 'yes' : 'no';
+                });
+            });
+
+            // listeners for Pebble disconnect
+            document.addEventListener("Pebble.disconnect",function(e){
+                eConnected.innerHTML = 'no';
+            });
+            
+            // tell java to listen for these
+            window.plugins.Pebble.registerConnect();
+            window.plugins.Pebble.registerDisconnect();
+
+            // dispatch initial state of connection
+            window.plugins.Pebble.isWatchConnected(function(connected){
+                document.dispatchEvent(new CustomEvent('Pebble.' +  (connected ? 'connect' : 'disconnect') ));
+            });
+
+            // trigger built-in sports app
+            eSportsOn.addEventListener('click', function(){
+                window.plugins.Pebble.startAppOnPebble('4dab81a6-d2fc-458a-992c-7a1f3b96a970');
+            });
+            // close built-in sports app
+            eSportsOff.addEventListener('click', function(){
+                window.plugins.Pebble.closeAppOnPebble('4dab81a6-d2fc-458a-992c-7a1f3b96a970');
+            });
+
+        </script>
+    </body>
+</html>
