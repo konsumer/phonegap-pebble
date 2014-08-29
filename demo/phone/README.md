@@ -1,4 +1,4 @@
-# phonegap-pebble demo
+# phonegap-pebble demo (phone)
 
 ## usage
 
