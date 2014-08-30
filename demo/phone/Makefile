@@ -7,7 +7,7 @@ android:
 	cordova platform add android
 
 ios:
-	cordova platform add android
+	cordova platform add ios
 
 run:
 	cordova run
