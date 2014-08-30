@@ -257,7 +257,7 @@ Pebble.prototype.unregisterNack = function(success, error){
  * @param  {Function} success (optional) called when native returns
  * @param  {Function} error   (optional) called when native returns with problem
  */
-Pebble.customizeWatchApp = function(type, name, icon, success, error){
+Pebble.prototype.customizeWatchApp = function(type, name, icon, success, error){
     if (!type || !name || !icon) return console.error('type, name & icon are required');
     this.base64image(icon.src || icon, 'image/png', function(dataURL){
         cordova.exec(success||dummy, error||genericError, 'Pebble', 'customizeWatchApp', [type, name, dataURL]);
