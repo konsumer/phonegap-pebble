@@ -29,16 +29,20 @@ public class PebblePGPlugin extends CordovaPlugin {
      */
     public static void dispatchEvent(String method, JSONObject detail) {
         Log.v(TAG, "dispatch: method=" + method + " " + detail.toString());
-        gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': '" + detail.toString() + "'}))");
+        gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': " + detail.toString() + "}))");
     }
     public static void dispatchEvent(String method, JSONArray detail) {
         Log.v(TAG, "dispatch: method=" + method + " " + detail.toString());
-        gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': '" + detail.toString() + "'}))");
+        gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': " + detail.toString() + "}))");
     }
     public static void dispatchEvent(String method, int detail) {
         String i = Integer.toString(detail);
         Log.v(TAG, "dispatch: method=" + method + " " + i);
         gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': " + i + "}))");
+    }
+    public static void dispatchEvent(String method, String detail) {
+        Log.v(TAG, "dispatch: method=" + method + " " + detail);
+        gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': '" + detail + "'}))");
     }
     public static void dispatchEvent(String method) {
         Log.v(TAG, "dispatch: method=" + method);
@@ -306,6 +310,42 @@ public class PebblePGPlugin extends CordovaPlugin {
          */
         if (action.equals("unregisterReceivedNackHandler")){
             PebbleKit.registerReceivedNackHandler(getApplicationContext(), null);
+            cb.success();
+            return true;
+        }
+
+        // TODO!
+        // requestDataLogsForApp + registerDataLogReceiver
+        if (action.equals("registerDatalog")){
+            cb.error("not implemented");
+            return true;
+        }
+
+        // TODO!
+        // registerDataLogReceiver(null)
+        if (action.equals("unregisterDatalog")){
+            cb.error("not implemented");
+            return true;
+        }
+
+        // TODO: check if this works
+        if (action.equals("customizeWatchApp")){
+            String stype = args.getString(0);
+            String name = args.getString(1);
+            Constants.PebbleAppType type = Constants.PebbleAppType.OTHER;
+
+            if (stype.equals("sports")){
+                type = Constants.PebbleAppType.SPORTS;
+            }
+
+            if (stype.equals("golf")){
+                type = Constants.PebbleAppType.GOLF;
+            }
+            
+            byte[] decodedByte = Base64.decode(args.getString(2), 0);
+            Bitmap icon = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+
+            PebbleKit.customizeWatchApp(this.cordova.getActivity().getApplicationContext(), type, name, icon);
             cb.success();
             return true;
         }

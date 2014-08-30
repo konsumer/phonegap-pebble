@@ -249,4 +249,39 @@ Pebble.prototype.unregisterNack = function(success, error){
     cordova.exec(success||dummy, error||genericError, 'Pebble', 'unregisterReceivedNackHandler', []);
 };
 
+/**
+ * Customize a built-in PebbleKit watch-app
+ * @param  {String}   type "golf", "sports", or "other"
+ * @param  {String}   name New name
+ * @param  {Image}    icon An image object for the icon
+ * @param  {Function} success (optional) called when native returns
+ * @param  {Function} error   (optional) called when native returns with problem
+ */
+Pebble.customizeWatchApp = function(type, name, icon, success, error){
+    if (!type || !name || !icon) return console.error('type, name & icon are required');
+    this.base64image(icon.src || icon, 'image/png', function(dataURL){
+        cordova.exec(success||dummy, error||genericError, 'Pebble', 'customizeWatchApp', [type, name, dataURL]);
+    });
+};
+
+/**
+ * Listen for data-logs
+ * @param  {Function} success (optional) called when native returns
+ * @param  {Function} error   (optional) called when native returns with problem
+ */
+Pebble.prototype.registerDatalog = function(success, error){
+    cordova.exec(success||dummy, error||genericError, 'Pebble', 'registerDatalog', []);
+};
+
+/**
+ * Stop Listening for data-logs
+ * @param  {Function} success (optional) called when native returns
+ * @param  {Function} error   (optional) called when native returns with problem
+ */
+Pebble.prototype.unregisterDatalog = function(success, error){
+    cordova.exec(success||dummy, error||genericError, 'Pebble', 'unregisterDatalog', []);
+};
+
+
+
 module.exports = new Pebble();
