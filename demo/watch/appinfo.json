@@ -1,0 +1,19 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "konsumer@jetboystudio.com",
+    "longName": "cordova",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "shortName": "cordova",
+    "uuid": "39457783-362f-4343-8846-7fec4fc6268f",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
