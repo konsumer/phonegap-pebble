@@ -2,5 +2,4 @@
 
 ## usage
 
-    cordova platform add android
-    cordova run
+    make

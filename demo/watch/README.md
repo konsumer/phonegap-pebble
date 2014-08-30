@@ -2,5 +2,4 @@
 
 ## usage
 
-    pebble build
-    pebble install
+    make
