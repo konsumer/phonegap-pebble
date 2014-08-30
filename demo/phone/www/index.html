@@ -37,6 +37,18 @@
                 var eMessages = document.getElementById('messages');
                 var eLetter = document.getElementById('currentLetter');
 
+                // send next letter
+                var alphabet = ('ABCDEFGHIJKLMNOPQRSTUVWXYZ').split('');
+                var l = 0;
+                function sendLetter(){
+                    var letter = alphabet[l%26];
+                    console.log('sent ' + letter)
+                    Pebble.sendData(uuid, [ {type:'string', key:0, value:letter, length:1} ]);
+                    l++;
+                }
+                eLetter.addEventListener("click", sendLetter);
+
+
                 // listeners for Pebble connect, update info
                 document.addEventListener("Pebble.connect",function(e){
                     Pebble.firmware(function(info){
@@ -55,19 +67,25 @@
                     eConnected.innerHTML = 'no';
                 });
 
-                // listen for ACK messages from Pebble
+                // listen for NACK messages from Pebble
                 document.addEventListener("Pebble.nack",function(e){
-                    console.log('ACK', e.details);
+                    console.log('NACK', e.detail);
                 });
 
-                // listen for NACK messages from Pebble
+                // listen for ACK messages from Pebble
                 document.addEventListener("Pebble.ack",function(e){
-                    console.log('NACK', e.details);
+                    console.log('ACK', e.detail);
+                    sendLetter();
                 });
 
                 // listen for data from Pebble
                 document.addEventListener("Pebble.data",function(e){
-                    console.log('DATA', e.details);
+                    e.detail.data = JSON.parse(e.detail.data);
+                    console.log('DATA', e.detail);
+                    eLetter.innerHTML = e.detail.data[0].value;
+
+                    // seems to crash my watch
+                    // Pebble.sendAck(e.detail.transaction);
                 });
                 
                 // tell java to listen for these
@@ -77,16 +95,15 @@
                 Pebble.registerNack(uuid);
                 Pebble.registerData(uuid);
 
-                // TODO: unregister on pause, register on resume
+                // TODO: unregister on pause, register on resume to prevent memory leaks
 
                 // dispatch initial state of connection
                 Pebble.isConnected(function(connected){
                     document.dispatchEvent(new CustomEvent('Pebble.' +  (connected ? 'connect' : 'disconnect') ));
                 });
 
-                eLetter.addEventListener("click",function(e){
-                    
-                });
+
+                
             });
         </script>
     </body>

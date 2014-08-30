@@ -47,7 +47,7 @@ static void in_received_handler(DictionaryIterator *received, void *context) {
 		if(tuple) {
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "received letter: %s", tuple->value->cstring);
 			text_layer_set_text(alphabet_text, tuple->value->cstring);
-			// send_message(tuple->value->cstring);
+			send_message(tuple->value->cstring);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-all: build install
+all: clean build install
 
 clean:
 	rm -rf build/

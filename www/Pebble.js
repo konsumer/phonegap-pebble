@@ -125,6 +125,9 @@ Pebble.prototype.sendData = function(uuid, data, transactionId, success, error){
         error = success;
         success = transactionId;
         transactionId = null;
+    }
+    
+    if (!transactionId){
         cordova.exec(success||dummy, error||genericError, 'Pebble', 'sendDataToPebble', [uuid, JSON.stringify(data)]);
     }else{
         cordova.exec(success||dummy, error||genericError, 'Pebble', 'sendDataToPebbleWithTransactionId', [uuid, JSON.stringify(data), transactionId]);
