@@ -314,15 +314,13 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
-        // TODO!
-        // requestDataLogsForApp + registerDataLogReceiver
+        // TODO: registerDataLogReceiver + requestDataLogsForApp
         if (action.equals("registerDatalog")){
             cb.error("not implemented");
             return true;
         }
 
-        // TODO!
-        // registerDataLogReceiver(null)
+        // TODO: registerDataLogReceiver(null)
         if (action.equals("unregisterDatalog")){
             cb.error("not implemented");
             return true;
