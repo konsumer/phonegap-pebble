@@ -1,2 +1,4 @@
 phone/platforms/
 phone/plugins/*.json
+watch/build/
+watch/.lock-*

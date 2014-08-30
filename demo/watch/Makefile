@@ -1,7 +1,7 @@
-all: clean build install
+all: build install
 
 clean:
-	rm -rf platforms plugins/*.json
+	rm -rf build/
 
 build:
 	pebble build
