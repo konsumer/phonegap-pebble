@@ -19,7 +19,7 @@
     },
     "installed_plugins": {
         "com.jetboystudio.pebble.PebblePGPlugin": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+            "PACKAGE_NAME": "com.jetboystudio.pebbledemo"
         }
     },
     "dependent_plugins": {}

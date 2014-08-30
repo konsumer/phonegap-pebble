@@ -12,7 +12,6 @@ import com.getpebble.android.kit.util.*;
 
 public class PebblePGPlugin extends CordovaPlugin {
     public static final String TAG = "PebblePGPlugin";
-    private PebbleKit.PebbleDataLogReceiver mDataLogReceiver = null;
     private static CordovaWebView gWebView;
 
     /**
@@ -29,10 +28,21 @@ public class PebblePGPlugin extends CordovaPlugin {
      * @param optional detail the detail-object for the event
      */
     public static void dispatchEvent(String method, JSONObject detail) {
-        gWebView.sendJavascript("javascript:document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': " + detail.toString() + "}))");
+        Log.v(TAG, "dispatch: method=" + method + " " + detail.toString());
+        gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': '" + detail.toString() + "'}))");
+    }
+    public static void dispatchEvent(String method, JSONArray detail) {
+        Log.v(TAG, "dispatch: method=" + method + " " + detail.toString());
+        gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': '" + detail.toString() + "'}))");
+    }
+    public static void dispatchEvent(String method, int detail) {
+        String i = Integer.toString(detail);
+        Log.v(TAG, "dispatch: method=" + method + " " + i);
+        gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "', {'detail': " + i + "}))");
     }
     public static void dispatchEvent(String method) {
-        gWebView.sendJavascript("javascript:document.dispatchEvent(new CustomEvent('Pebble." + method + "'))");
+        Log.v(TAG, "dispatch: method=" + method);
+        gWebView.sendJavascript("document.dispatchEvent(new CustomEvent('Pebble." + method + "'))");
     }
 
     @Override
@@ -117,6 +127,9 @@ public class PebblePGPlugin extends CordovaPlugin {
             return true;
         }
 
+        /**
+         * Trigger a Pebble music-change
+         */
         if (action.equals("music")){
             final Intent i = new Intent("com.getpebble.action.NOW_PLAYING");
             i.putExtra("artist", args.getString(0));
@@ -129,13 +142,65 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
 
         /**
-         * Register a callback when watch is connected
+         * Send data to pebble
          */
-        if (action.equals("registerPebbleConnectedReceiver")){
-            PebbleKit.registerPebbleConnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
+        if (action.equals("sendDataToPebble")){
+            UUID uuid = UUID.fromString(args.getString(0));
+            PebbleDictionary data = PebbleDictionary.fromJson(args.getString(1));
+            PebbleKit.sendDataToPebble(this.cordova.getActivity().getApplicationContext(), uuid, data);
+            cb.success();
+            return true;
+        }
+
+        /**
+         * Send data to pebble with transactionId
+         */
+        if (action.equals("sendDataToPebbleWithTransactionId")){
+            UUID uuid = UUID.fromString(args.getString(0));
+            int transactionId = args.getInt(1);
+            PebbleDictionary data = PebbleDictionary.fromJson(args.getString(1));
+            PebbleKit.sendDataToPebbleWithTransactionId(this.cordova.getActivity().getApplicationContext(), uuid, data, transactionId);
+            cb.success();
+            return true;
+        }
+
+        /**
+         * Send ACK to pebble with transactionId
+         */
+        if (action.equals("sendAckToPebble")){
+            int transactionId = args.getInt(0);
+            PebbleKit.sendAckToPebble(this.cordova.getActivity().getApplicationContext(), transactionId);
+            cb.success(transactionId);
+            return true;
+        }
+
+        /**
+         * Send NACK to pebble with transactionId
+         */
+        if (action.equals("sendNackToPebble")){
+            int transactionId = args.getInt(0);
+            PebbleKit.sendNackToPebble(this.cordova.getActivity().getApplicationContext(), transactionId);
+            cb.success(transactionId);
+            return true;
+        }
+
+        /**
+         * Register a callback when watch sends data
+         */
+        if (action.equals("registerReceivedDataHandler")){
+            final UUID uuid = UUID.fromString(args.getString(0));
+            PebbleKit.registerReceivedDataHandler(getApplicationContext(), new PebbleKit.PebbleDataReceiver(uuid) {
                 @Override
-                public void onReceive(Context context, Intent intent) {
-                    dispatchEvent("connected");
+                public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
+                    try{
+                        JSONObject json = new JSONObject();
+                        json.put("transaction", transactionId);
+                        json.put("data", data.toJsonString());
+                        json.put("uuid", uuid.toString());
+                        dispatchEvent("data", json);
+                    }catch(JSONException e){
+                        cb.error(e.getCause().getMessage());
+                    }
                 }
             });
             cb.success();
@@ -143,13 +208,22 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
 
         /**
-         * Register a callback when watch is disconnected
+         * Unregister a callback when watch sends data
          */
-        if (action.equals("registerPebbleDisconnectedReceiver")){
-            PebbleKit.registerPebbleDisconnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
+        if (action.equals("unregisterReceivedDataHandler")){
+            PebbleKit.registerReceivedDataHandler(getApplicationContext(), null);
+            cb.success();
+            return true;
+        }
+
+        /**
+         * Register a callback when watch is connected
+         */
+        if (action.equals("registerPebbleConnectedReceiver")){
+            PebbleKit.registerPebbleConnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    dispatchEvent("disconnected");
+                    dispatchEvent("connect");
                 }
             });
             cb.success();
@@ -166,10 +240,72 @@ public class PebblePGPlugin extends CordovaPlugin {
         }
 
         /**
+         * Register a callback when watch is disconnected
+         */
+        if (action.equals("registerPebbleDisconnectedReceiver")){
+            PebbleKit.registerPebbleDisconnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    dispatchEvent("disconnect");
+                }
+            });
+            cb.success();
+            return true;
+        }
+
+        /**
          * Unregister a callback when watch is disconnected
          */
         if (action.equals("unregisterPebbleDisconnectedReceiver")){
             PebbleKit.registerPebbleDisconnectedReceiver(getApplicationContext(), null);
+            cb.success();
+            return true;
+        }
+
+        /**
+         * Register watch ACK handler
+         */
+        if (action.equals("registerReceivedAckHandler")){
+            UUID uuid = UUID.fromString(args.getString(0));
+            PebbleKit.registerReceivedAckHandler(getApplicationContext(), new PebbleKit.PebbleAckReceiver(uuid) {
+                @Override
+                public void receiveAck(Context context, int transactionId) {
+                    dispatchEvent("ack", transactionId);
+                }
+            });
+            cb.success();
+            return true;
+        }
+
+        /**
+         * Unregister watch ACK handler
+         */
+        if (action.equals("unregisterReceivedAckHandler")){
+            PebbleKit.registerReceivedAckHandler(getApplicationContext(), null);
+            cb.success();
+            return true;
+        }
+
+        /**
+         * Register watch NACK handler
+         */
+        if (action.equals("registerReceivedNackHandler")){
+            UUID uuid = UUID.fromString(args.getString(0));
+            PebbleKit.registerReceivedNackHandler(getApplicationContext(), new PebbleKit.PebbleNackReceiver(uuid) {
+                @Override
+                public void receiveNack(Context context, int transactionId) {
+                    dispatchEvent("nack", transactionId);
+                }
+            });
+            cb.success();
+            return true;
+        }
+
+        /**
+         * Unregister watch NACK handler
+         */
+        if (action.equals("unregisterReceivedNackHandler")){
+            PebbleKit.registerReceivedNackHandler(getApplicationContext(), null);
             cb.success();
             return true;
         }
