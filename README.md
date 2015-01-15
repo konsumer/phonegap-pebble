@@ -63,7 +63,7 @@ Use this if you want to keep everything in javascript and don't need anything th
 This is how you leverage the capabilities of your smart-phone, like internet, increased storage, GPS, etc. You can do this 3 different ways:
 
 
-#### PebbleKit JS
+#### [PebbleKit JS](http://developer.getpebble.com/docs/js/)
 
 Use this if you just need simple interface to basic phone capabilities.
 
@@ -94,7 +94,7 @@ Use this if you need more than PebbleKitJS (in the form of a companion-app) & pr
 - less performant than native
 
 
-#### native [Android](http://developer.getpebble.com/docs/android/) [iOS](http://developer.getpebble.com/docs/ios/)
+#### native [Android](http://developer.getpebble.com/docs/android/) / [iOS](http://developer.getpebble.com/docs/ios/)
 
 Use this if you need more than PebbleKitJS (in the form of a companion-app) & don't need to support multiple platforms.
 
