@@ -22,9 +22,11 @@ Coming soon.
 
 There are 2 parts to a potential Pebble app: on-Pebble watchface/app & on-phone. This project only deals with the on-phone part, but I will talk about options for both.
 
+
 ### on-Pebble
 
 This is the actual thing on the Pebble that makes the watchface, runs as app, & interacts with phone (if needed.) You can do it in a couple ways:
+
 
 #### [PebbleC](http://developer.getpebble.com/docs/c/)
 
@@ -55,16 +57,51 @@ Use this if you want to keep everything in javascript and don't need anything th
 
 - many things in C API are not implemented.
 
+
 ### on-Phone
 
-#### this project
+This is how you leverage the capabilities of your smart-phone, like internet, increased storage, GPS, etc. You can do this 3 different ways:
+
+
+#### PebbleKit JS
+
+Use this if you just need simple interface to basic phone capabilities.
 
 **pros**
 
-- same code works on iOS & android
+- no install on the phone (uses Pebble app, which is required by everything else anyway)
+- 'settings' in Pebble app links to your own HTML page
+- very easy
+
+**cons**
+
+- incredibly limited subset of API.
+
+
+#### this project
+
+Use this if you need more than PebbleKitJS (in the form of a companion-app) & prefer the cordova way of doing things.
+
+**pros**
+
+- same code works on iOS & Android
 - simple web technology (js, css, html,) easier if you are already familiar
 - full native API implemented
+- lots of other libraries available for cordova to do other things
 
 **cons**
 
 - less performant than native
+
+
+#### native [Android](http://developer.getpebble.com/docs/android/) [iOS](http://developer.getpebble.com/docs/ios/)
+
+Use this if you need more than PebbleKitJS (in the form of a companion-app) & don't need to support multiple platforms.
+
+**pros**
+
+- slightly more performant than this project for a few things
+
+**cons**
+
+- have to make new apps for every supported platform
