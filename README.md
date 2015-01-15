@@ -11,11 +11,60 @@ It's not all complete, but I'm working on it.
 ## Supported Platforms
 
 - Android
-
-Anyone want to add to this list?
+- iOs (planned)
 
 
 ## Usage
 
 Coming soon.
 
+## Making Pebbble Apps
+
+There are 2 parts to a potential Pebble app: on-Pebble watchface/app & on-phone. This project only deals with the on-phone part, but I will talk about options for both.
+
+### on-Pebble
+
+This is the actual thing on the Pebble that makes the watchface, runs as app, & interacts with phone (if needed.) You can do it in a couple ways:
+
+#### [PebbleC](http://developer.getpebble.com/docs/c/)
+
+Use this if you are comfortable with C.
+
+**pros**
+
+- very fast
+- full API - you can do everything a Pebble can do
+
+**cons**
+
+- trickier to use than javascript
+- brain has to switch around if you are using javascript for phone-ui
+- lower-level than javascript
+
+
+#### [Pebble.js](http://developer.getpebble.com/docs/pebblejs)
+
+Use this if you want to keep everything in javascript and don't need anything that's C-only.
+
+**pros**
+
+- very easy to use
+- same programming-langage as phone-side, if you are using cordova
+
+**cons**
+
+- many things in C API are not implemented.
+
+### on-Phone
+
+#### this project
+
+**pros**
+
+- same code works on iOS & android
+- simple web technology (js, css, html,) easier if you are already familiar
+- full native API implemented
+
+**cons**
+
+- less performant than native
