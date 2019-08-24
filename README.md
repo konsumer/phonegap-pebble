@@ -1,5 +1,7 @@
 # PebbleKit
 
+## WARNING: Pebble is dead. This project won't be super-useful.
+
 This plugin provides a cordova plugin interface for [PebbleKit](https://github.com/pebble/pebblekit)
 
 It's not all complete, but I'm working on it.
